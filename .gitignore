@@ -1,0 +1,5 @@
+.env
+node_modules
+build
+interface-gen
+uint256.wasm
