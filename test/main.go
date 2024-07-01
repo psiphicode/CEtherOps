@@ -10,10 +10,10 @@ func load_u256(u *uint256.Int, i int) {
 }
 
 func print_uint(label string, x *uint256.Int) {
-	fmt.Println(label+"[0]: ", x[0])
-	fmt.Println(label+"[1]: ", x[1])
-	fmt.Println(label+"[2]: ", x[2])
-	fmt.Println(label+"[3]: ", x[3])
+	fmt.Println(label+"[0]:", x[0])
+	fmt.Println(label+"[1]:", x[1])
+	fmt.Println(label+"[2]:", x[2])
+	fmt.Println(label+"[3]:", x[3])
 }
 
 func tf(v bool) int {
@@ -53,7 +53,7 @@ func opSAR(res, value, shift *uint256.Int) {
 }
 
 func test_run(i int, res, x, y, z *uint256.Int) {
-    fmt.Println("---------------------------------------- ", i);
+    fmt.Println("----------------------------------------", i);
 
     // add
     res.Add(x, y);
@@ -101,27 +101,27 @@ func test_run(i int, res, x, y, z *uint256.Int) {
 
     // lt
     r := x.Lt(y);
-    fmt.Println("lt(x, y): ", tf(r));
+    fmt.Println("lt(x, y):", tf(r));
 
     // gt
     r = x.Gt(y);
-    fmt.Println("gt(x, y): ", tf(r));
+    fmt.Println("gt(x, y):", tf(r));
 
     // slt
     r = x.Slt(y);
-    fmt.Println("slt(x, y): ", tf(r));
+    fmt.Println("slt(x, y):", tf(r));
 
     // sgt
     r = x.Sgt(y);
-    fmt.Println("sgt(x, y): ", tf(r));
+    fmt.Println("sgt(x, y):", tf(r));
 
     // eq
     r = x.Eq(y);
-    fmt.Println("eq(x, y): ", tf(r));
+    fmt.Println("eq(x, y):", tf(r));
 
     // is_zero
     r = res.IsZero();
-    fmt.Println("is_zero(x): ", tf(r));
+    fmt.Println("is_zero(x):", tf(r));
 
     // and
     res.And(x, y);
@@ -163,7 +163,7 @@ func main() {
 	var y *uint256.Int = &uint256.Int{}
 	var z *uint256.Int = &uint256.Int{}
 
-	for i:=0; i < 99-3; i+= 3 {
+	for i:=0; i < len(test_cases_u256) - 3; i+= 3 {
 		load_u256(x, i)
 		load_u256(y, i+1)
 		load_u256(z, i+2)

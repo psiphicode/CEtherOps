@@ -3,3 +3,4 @@ node_modules
 build
 interface-gen
 uint256.wasm
+test_cases.*

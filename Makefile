@@ -37,14 +37,11 @@ build/%.o: %.c cargo-generate
 	mkdir -p build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-test/uint256_test: test/uint256_test.c test/test_cases.c src/uint256.c src/helpers.c
+# Run all of the tests
+testpy: test/test_c_and_go.py scripts/gen_test_cases.py test/uint256_test test/test_cases.go test/main.go
+	python scripts/gen_test_cases.py 33
 	gcc -I./include -Wall -g -o test/uint256_test test/uint256_test.c test/test_cases.c src/uint256.c test/helpers.c
-
-test: test/uint256_test
-	./test/uint256_test
-
-gotest: test/main.go test/test_cases.go
-	go run test/main.go test/test_cases.go
+	python test/test_c_and_go.py
 
 # Step 4: link
 build/uint256.wasm: $(OBJECTS)
@@ -57,4 +54,4 @@ uint256.wasm: build/uint256.wasm
 clean:
 	rm -rf interface-gen build uint256.wasm
 
-.phony: all cargo-generate clean test gotest
+.phony: all cargo-generate clean testpy

@@ -7,9 +7,7 @@ void print_uint(const char *label, u256 x) {
            label, x[0], label, x[1], label, x[2], label, x[3]);
 }
 
-extern int num_u64;
 extern int num_u256;
-extern u64 test_cases_u64[];
 extern u256 test_cases_u256[];
 
 void load_u256(u256 u, int i) {
@@ -127,7 +125,7 @@ void test_run(int i, u256 res, u256 x, u256 y, u256 z) {
 int main() {
     u256 res, x, y, z;
 
-    for (int i = 0; i < 99-3; i += 3) {
+    for (int i = 0; i < (num_u256-3); i += 3) {
         load_u256(x, i);
         load_u256(y, i+1);
         load_u256(z, i+2);

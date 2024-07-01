@@ -15,11 +15,10 @@ async function main() {
     const contract = new ethers.Contract(addr, abi, provider);
 
     for (let i = 0; i < 10; i++) {
-        console.log('-----------------------------------------------------------', i);
+        console.log("---------------------------------------- ", i);
         let m = randomBigInt();
         let x = randomBigInt();
         let y = randomBigInt();
-
 
         let x1 = x % m;
         let y1 = y % m;
