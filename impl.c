@@ -406,8 +406,8 @@ ArbResult Eq(uint8_t *input, size_t len) {
 }
 
 ArbResult IsZero(uint8_t *input, size_t len) {
-    // require input to be two evm words
-    if (len != 64) {
+    // require input to be one evm word
+    if (len != 32) {
         return nodata(Failure);
     }
 
@@ -493,7 +493,7 @@ ArbResult Xor(uint8_t *input, size_t len) {
 
 
 ArbResult Not(uint8_t *input, size_t len) {
-    // require input to be two evm words
+    // require input to be one evm word
     if (len != 32) {
         return nodata(Failure);
     }
