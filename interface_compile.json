@@ -8,6 +8,13 @@
         [
           "./uint256.sol"
         ]
+      },
+      "uint256_test":
+      {
+        "urls":
+        [
+          "./test/uint256_test.sol"
+        ]
       }
     },
     "settings":
@@ -16,7 +23,8 @@
         "*": {
           "*": [
             "abi",
-            "storageLayout"
+            "storageLayout",
+            "evm.bytecode"
           ]
         }
       }

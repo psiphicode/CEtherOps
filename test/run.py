@@ -15,7 +15,7 @@ def run_c_test():
 
 def run_go_test():
     print("------ Running Go code")
-    go_result = subprocess.run(['go', 'run', 'test/main.go',
+    go_result = subprocess.run(['go', 'run', 'test/uint256_t.go',
                                 'test/test_cases.go'],
                                capture_output=True)
     if go_result.returncode != 0:

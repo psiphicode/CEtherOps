@@ -11,7 +11,7 @@ all: uint256.wasm
 # STEP1 : compile solidity
 # The output is used by cargo and can also be used by any web3 for ABI
 # For interface_compile.json see: https://docs.soliditylang.org/en/v0.8.20/using-the-compiler.html#compiler-input-and-output-json-description
-build/interface.json: interface_compile.json uint256.sol
+build/interface.json: interface_compile.json uint256.sol test/uint256_test.sol
 	mkdir -p build
 	cat $< | solc --standard-json --pretty-json > $@
 
@@ -38,10 +38,10 @@ build/%.o: %.c cargo-generate
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Run all of the tests
-testpy: test/test_c_and_go.py scripts/gen_test_cases.py test/uint256_test test/test_cases.go test/main.go
+testpy: test/run.py scripts/gen_test_cases.py test/uint256_test.c test/test_cases.go test/uint256_t.go
 	python scripts/gen_test_cases.py 33
 	gcc -I./include -Wall -g -o test/uint256_test test/uint256_test.c test/test_cases.c src/uint256.c test/helpers.c
-	python test/test_c_and_go.py
+	python test/run.py
 
 # Step 4: link
 build/uint256.wasm: $(OBJECTS)

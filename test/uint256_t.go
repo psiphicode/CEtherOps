@@ -169,4 +169,9 @@ func main() {
 		load_u256(z, i+2)
 		test_run(i/3, res, x, y, z)
 	}
+
+    // sm := uint256.NewInt(1)
+    // bi := uint256.NewInt(2)
+    // sub := sm.Sub(sm, bi)
+    // fmt.Println(sub.Dec())
 }

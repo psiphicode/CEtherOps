@@ -1,5 +1,4 @@
 #include <stdbool.h>
-// #include <stylus_types.h>
 #include <uint256.h>
 
 /*
@@ -1149,3 +1148,4 @@ void reduce4(u256 res, u512 x, u256 m, u64 *mu) {
     res[1] = r1;
     res[0] = r0;
 }
+

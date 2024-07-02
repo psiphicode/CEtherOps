@@ -2,6 +2,48 @@
 #include <uint256.h>
 
 
+int leading_z(char * res) {
+    for (int i = 0; i < 20; i++) {
+        if (res[i] != '0') {
+            return i;
+        }
+    }
+    return 19;
+}
+
+void reset_buf(char * res) {
+    for (int i = 0; i < 19; i++) {
+        res[i] = '0';
+    }
+    res[19] = '\0';
+}
+
+int to_decimal(char * res, u256 value) {
+    // assume len(res) > 99
+    u256 quot, rem, temp, divisor;
+    clear_words(&divisor[0], 4);
+    divisor[0] = 10000000000000000000ULL;
+
+    /* int pos = 98; */
+    char buf[20];
+
+    while (true) {
+        reset_buf(buf);
+        udivrem(quot, temp, 4, divisor, rem);
+        copy_words(&temp[0], &quot[0], 4);
+
+
+        sprintf(buf, "%lu", rem[0]);
+
+        if (_is_zero(temp)) {
+            break;
+        }
+
+    }
+
+    return 0;
+}
+
 void print_uint(const char *label, u256 x) {
     printf("%s[0]: %lu\n%s[1]: %lu\n%s[2]: %lu\n%s[3]: %lu\n",
            label, x[0], label, x[1], label, x[2], label, x[3]);
@@ -131,6 +173,12 @@ int main() {
         load_u256(z, i+2);
         test_run(i/3, res, x, y, z);
     }
+
+    /* char buf[21]; */
+    /*  */
+    /* sprintf(buf, "%llu", 0xffffffffffffffffULL); */
+    /*  */
+    /* printf("%s", buf); */
 
     // mul(res, x, y);
     // print_uint("mul(x, y)", res);

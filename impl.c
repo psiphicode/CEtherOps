@@ -70,6 +70,9 @@ void inline swap_endian(u256 buf_out) {
     buf_out[1] = temp;
 }
 
+/*
+    Arithmetic
+*/
 ArbResult Add(uint8_t *input, size_t len) {
     // require input to be two evm words
     if (len != 64) {
@@ -89,7 +92,6 @@ ArbResult Add(uint8_t *input, size_t len) {
 
     return success((uint8_t*)buf_out);
 }
-
 
 ArbResult Mul(uint8_t *input, size_t len) {
     // require input to be two evm words
@@ -231,7 +233,6 @@ ArbResult AddMod(uint8_t *input, size_t len) {
     return success((uint8_t*)buf_out);
 }
 
-
 ArbResult MulMod(uint8_t *input, size_t len) {
     // require input to be three evm words
     if (len != 96) {
@@ -251,7 +252,6 @@ ArbResult MulMod(uint8_t *input, size_t len) {
 
     return success((uint8_t*)buf_out);
 }
-
 
 ArbResult Exp(uint8_t *input, size_t len) {
     // require input to be two evm words
@@ -294,7 +294,9 @@ ArbResult SignExtend(uint8_t *input, size_t len) {
     return success((uint8_t*)buf_out);
 }
 
-// comparison
+/*
+    Comparison
+*/
 ArbResult Lt(uint8_t *input, size_t len) {
     // require input to be two evm words
     if (len != 64) {
@@ -427,8 +429,9 @@ ArbResult IsZero(uint8_t *input, size_t len) {
     return success((uint8_t*)buf_out);
 }
 
-// bitwise
-
+/*
+    Bitwise
+*/
 ArbResult And(uint8_t *input, size_t len) {
     // require input to be two evm words
     if (len != 64) {
@@ -448,7 +451,6 @@ ArbResult And(uint8_t *input, size_t len) {
 
     return success((uint8_t*)buf_out);
 }
-
 
 ArbResult Or(uint8_t *input, size_t len) {
     // require input to be two evm words
@@ -470,7 +472,6 @@ ArbResult Or(uint8_t *input, size_t len) {
     return success((uint8_t*)buf_out);
 }
 
-
 ArbResult Xor(uint8_t *input, size_t len) {
     // require input to be two evm words
     if (len != 64) {
@@ -491,7 +492,6 @@ ArbResult Xor(uint8_t *input, size_t len) {
     return success((uint8_t*)buf_out);
 }
 
-
 ArbResult Not(uint8_t *input, size_t len) {
     // require input to be one evm word
     if (len != 32) {
@@ -511,7 +511,6 @@ ArbResult Not(uint8_t *input, size_t len) {
 
     return success((uint8_t*)buf_out);
 }
-
 
 ArbResult Byte(uint8_t *input, size_t len) {
     // require input to be two evm words
