@@ -37,6 +37,10 @@ build/%.o: %.c cargo-generate
 	mkdir -p build
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Generate the test cases files
+test/test_cases.go test/test_cases.c: scripts/gen_test_cases.py
+	python scripts/gen_test_cases.py 33
+
 # Run all of the tests
 testpy: test/run.py scripts/gen_test_cases.py test/uint256_test.c test/test_cases.go test/uint256_t.go
 	python scripts/gen_test_cases.py 33
