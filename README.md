@@ -19,10 +19,10 @@ The testing in this project is unconventional because I'm comparing the results 
     - Use Python to capture std output of the compiled C to the std output of the compiled Go code.
     - These tests must get the same results for each Opcode invocation, then they must write the results to std output identically.
     - I'm sure it's better to write each test's results to JSON and then compare them, but I did this as a quick first pass.
+- I compare the way EVM handles big integers in Solidity to the Stylus contract.
+    - Use Solidity/Yul contract to compute the opcode results then compare to the results of a cross-contract call to the Stylus contract.
 - TODO: I compare the way JavaScript handles big integers to the Stylus contract directly.
     - Use JS to compute the integer operations, then compare to the results of calling the functions on the Sepolia testnet using ethers.
-- TODO: I compare the way EVM handles big integers in Solidity to the Stylus contract.
-    - Use Solidity/Yul contract to compute the opcode results then compare to the results of a cross-contract call to the Stylus contract.
 
 The tests use randomly-generated integers. Passing tests only prove the correctness of subsets of all possible inputs and are not a guarantee of the safety of the code.
 
@@ -31,9 +31,16 @@ Run the Python test:
 make testpy
 ```
 
+Run the Solidity test:
+```sh
+node test/uint256_test.js
+```
+
+#### Now with a newly discovered bug
+After some testing I've identified a potential bug in the `exp` function. First, the Solidity/Yul `exp` result differs from the Stylus `exp` result. Secondly, every invocation of `_exp` and `Exp` in c and Go, respectively, returns zero, which is different from either Solidity or Stylus...
+
 #### TODO
 - Write the JS tests
-- Write the Solidity tests
 - Update the C/Go tests to write the results into JSON
 
 ## Build & Deploy
