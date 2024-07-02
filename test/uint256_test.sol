@@ -41,14 +41,19 @@ contract Uint256Test {
     function test_values(uint256[] memory values, uint256 runners)
         public view returns (uint, uint, uint, uint, uint, uint, uint, uint)
     {
+        uint result1;
+        uint result2;
+        uint x;
+        uint y;
+        uint z;
         for (uint i = 0; i < (values.length/3); i+=3) {
-            uint256 result1;
-            uint256 result2;
-            uint256 x = values[i];
-            uint256 y = values[i+1];
-            uint256 z = values[i+2];
+            result1;
+            result2;
+            x = values[i];
+            y = values[i+1];
+            z = values[i+2];
 
-            if (runners > 0) {
+            if ((runners & 1) > 0) {
                 // Add
                 result1 = stylusContract.Add(x, y);
                 assembly {
@@ -57,7 +62,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 0, i, result1, result2, x, y, z);
             }
 
-            if (runners > 1) {
+            if ((runners & 2) > 0) {
                 // Mul
                 result1 = stylusContract.Mul(x, y);
                 assembly {
@@ -66,7 +71,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 1, i, result1, result2, x, y, z);
             }
 
-            if (runners > 2) {
+            if ((runners & 4) > 0) {
                 // Sub
                 result1 = stylusContract.Sub(x, y);
                 assembly {
@@ -75,7 +80,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 2, i, result1, result2, x, y, z);
             }
 
-            if (runners > 3) {
+            if ((runners & 8) > 0) {
                 // Div
                 result1 = stylusContract.Div(x, y);
                 assembly {
@@ -84,7 +89,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 3, i, result1, result2, x, y, z);
             }
 
-            if (runners > 4) {
+            if ((runners & 16) > 0) {
                 // SDiv
                 result1 = stylusContract.SDiv(x, y);
                 assembly {
@@ -93,7 +98,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 4, i, result1, result2, x, y, z);
             }
 
-            if (runners > 5) {
+            if ((runners & 32) > 0) {
                 // Mod
                 result1 = stylusContract.Mod(x, y);
                 assembly {
@@ -102,7 +107,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 5, i, result1, result2, x, y, z);
             }
 
-            if (runners > 6) {
+            if ((runners & 64) > 0) {
                 // SMod
                 result1 = stylusContract.SMod(x, y);
                 assembly {
@@ -111,7 +116,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 6, i, result1, result2, x, y, z);
             }
 
-            if (runners > 7) {
+            if ((runners & 128) > 0) {
                 // AddMod
                 result1 = stylusContract.AddMod(x, y, z);
                 assembly {
@@ -120,7 +125,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 7, i, result1, result2, x, y, z);
             }
 
-            if (runners > 8) {
+            if ((runners & 256) > 0) {
                 // MulMod
                 result1 = stylusContract.MulMod(x, y, z);
                 assembly {
@@ -129,7 +134,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 8, i, result1, result2, x, y, z);
             }
 
-            if (runners > 9) {
+            if ((runners & 512) > 0) {
                 // Exp
                 result1 = stylusContract.Exp(x, y);
                 assembly {
@@ -138,7 +143,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 9, i, result1, result2, x, y, z);
             }
 
-            if (runners > 10) {
+            if ((runners & 1024) > 0) {
                 // SignExtend
                 result1 = stylusContract.SignExtend(x, y);
                 assembly {
@@ -150,7 +155,7 @@ contract Uint256Test {
             /*
                Comparisons
             */
-            if (runners > 11) {
+            if ((runners & 2048) > 0) {
                 // Lt
                 result1 = stylusContract.Lt(x, y) ? 1 : 0;
                 assembly {
@@ -159,7 +164,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 11, i, result1, result2, x, y, z);
             }
 
-            if (runners > 12) {
+            if ((runners & 4096) > 0) {
                 // Gt
                 result1 = stylusContract.Gt(x, y) ? 1 : 0;
                 assembly {
@@ -168,7 +173,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 12, i, result1, result2, x, y, z);
             }
 
-            if (runners > 13) {
+            if ((runners & 8192) > 0) {
                 // Slt
                 result1 = stylusContract.Slt(x, y) ? 1 : 0;
                 assembly {
@@ -177,7 +182,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 13, i, result1, result2, x, y, z);
             }
 
-            if (runners > 14) {
+            if ((runners & 16384) > 0) {
                 // Sgt
                 result1 = stylusContract.Sgt(x, y) ? 1 : 0;
                 assembly {
@@ -186,7 +191,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 14, i, result1, result2, x, y, z);
             }
 
-            if (runners > 15) {
+            if ((runners & 32768) > 0) {
                 // Eq
                 result1 = stylusContract.Eq(x, y) ? 1 : 0;
                 assembly {
@@ -195,7 +200,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 15, i, result1, result2, x, y, z);
             }
 
-            if (runners > 16) {
+            if ((runners & 65536) > 0) {
                 // IsZero
                 result1 = stylusContract.IsZero(x) ? 1 : 0;
                 assembly {
@@ -207,7 +212,7 @@ contract Uint256Test {
             /*
                 Bitwise
             */
-            if (runners > 17) {
+            if ((runners & 131072) > 0) {
                 // And
                 result1 = stylusContract.And(x, y);
                 assembly {
@@ -216,7 +221,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 17, i, result1, result2, x, y, z);
             }
 
-            if (runners > 18) {
+            if ((runners & 262144) > 0) {
                 // Or
                 result1 = stylusContract.Or(x, y);
                 assembly {
@@ -225,7 +230,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 18, i, result1, result2, x, y, z);
             }
 
-            if (runners > 19) {
+            if ((runners & 524288) > 0) {
                 // Xor
                 result1 = stylusContract.Xor(x, y);
                 assembly {
@@ -234,7 +239,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 19, i, result1, result2, x, y, z);
             }
 
-            if (runners > 20) {
+            if ((runners & 1048576) > 0) {
                 // Not
                 result1 = stylusContract.Not(x);
                 assembly {
@@ -243,7 +248,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 20, i, result1, result2, x, y, z);
             }
 
-            if (runners > 21) {
+            if ((runners & 2097152) > 0) {
                 // Byte
                 result1 = stylusContract.Byte(x, y);
                 assembly {
@@ -252,7 +257,7 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 21, i, result1, result2, x, y, z);
             }
 
-            if (runners > 22) {
+            if ((runners & 4194304) > 0) {
                 // Shl
                 result1 = stylusContract.Shl(x, y);
                 assembly {
@@ -261,22 +266,22 @@ contract Uint256Test {
                 if (result1 != result2) return (0, 22, i, result1, result2, x, y, z);
             }
 
-            if (runners > 23) {
+            if ((runners & 8388608) > 0) {
                 // Shr
                 result1 = stylusContract.Shr(x, y);
                 assembly {
                     result2 := shr(x, y)
                 }
-                if (result1 != result2) return (0, 22, i, result1, result2, x, y, z);
+                if (result1 != result2) return (0, 23, i, result1, result2, x, y, z);
             }
 
-            if (runners > 24) {
+            if ((runners & 16777216) > 0) {
                 // Sar
                 result1 = stylusContract.Sar(x, y);
                 assembly {
                     result2 := sar(y, x)
                 }
-                if (result1 != result2) return (0, 23, i, result1, result2, x, y, z);
+                if (result1 != result2) return (0, 24, i, result1, result2, x, y, z);
             }
         }
         return (1, 0, 0, 0, 0, 0, 0, 0);

@@ -27,6 +27,8 @@
             "evm.bytecode"
           ]
         }
-      }
+      },
+      "optimizer": { "enabled": true },
+      "viaIR": true
     }
 }

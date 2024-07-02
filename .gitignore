@@ -4,4 +4,4 @@ build
 interface-gen
 uint256.wasm
 test_cases.*
-uint256_test
+test/uint256_test
