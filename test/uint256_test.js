@@ -3,6 +3,8 @@ const ethers = require("ethers");
 const crypto = require("crypto");
 
 
+const MAX_UINT256 = (1n << 256n) - 1n;
+
 function randomBigInt() {
     let b = crypto.randomBytes(32);
     return BigInt('0x' + b.toString('hex'));
@@ -30,7 +32,7 @@ const opcodes_to_test = [
     'SMod',
     'AddMod',
     'MulMod',
-    // 'Exp',
+    'Exp',
     'SignExtend',
     'Lt',
     'Gt',
@@ -64,7 +66,7 @@ async function main() {
     const contract = new ethers.Contract(addr, abi, provider);
 
     const values = [];
-    for (let i = 0; i<33; i++) {
+    for (let i = 0; i<99; i++) {
         values[i] = randomBigInt();
     }
 
@@ -76,9 +78,6 @@ async function main() {
     } else {
         console.log("Test failed. Here's the data:");
         console.log(`Opcode: ${opcodes[opcode]}`);
-        console.log(`x: ${values[loop_num]}`);
-        console.log(`y: ${values[loop_num+1n]}`);
-        console.log(`z: ${values[loop_num+2n]}`);
         console.log(`result1: ${result1}`);
         console.log(`result2: ${result2}`);
         console.log(`x: ${x}`);
@@ -87,7 +86,6 @@ async function main() {
     }
 }
 
-// const MAX_UINT256 = (1n << 256n) - 1n;
 
 // function to_u256(num) {
 //     return num & MAX_UINT256;

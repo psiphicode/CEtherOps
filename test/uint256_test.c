@@ -174,6 +174,13 @@ int main() {
         test_run(i/3, res, x, y, z);
     }
 
+    /* clear_words(&x[0], 4); */
+    /* x[0] = 42069; */
+    /* clear_words(&y[0], 4); */
+    /* y[0] = 344; */
+    /* _exp(res, x, y); */
+    /* print_uint("exp(42069, 344)", res); */
+
     /* char buf[21]; */
     /*  */
     /* sprintf(buf, "%llu", 0xffffffffffffffffULL); */

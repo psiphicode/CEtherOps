@@ -170,6 +170,13 @@ func main() {
 		test_run(i/3, res, x, y, z)
 	}
 
+    base := uint256.NewInt(42069)
+    exponent := uint256.NewInt(344)
+    res.Exp(base, exponent)
+
+    // fmt.Println(res.Dec())
+    // print_uint("exp(42069, 344)", res)
+
     // sm := uint256.NewInt(1)
     // bi := uint256.NewInt(2)
     // sub := sm.Sub(sm, bi)

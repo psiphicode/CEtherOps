@@ -36,8 +36,8 @@ Run the Solidity test:
 node test/uint256_test.js
 ```
 
-#### Now with a newly discovered bug
-After some testing I've identified a potential bug in the `exp` function. First, the Solidity/Yul `exp` result differs from the Stylus `exp` result. Secondly, every invocation of `_exp` and `Exp` in c and Go, respectively, returns zero, which is different from either Solidity or Stylus...
+#### Passing Tests
+Both the C/Go tests and the Solidity/Yul and Stylus tests are passing now.
 
 #### TODO
 - Write the JS tests

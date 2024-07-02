@@ -36,7 +36,7 @@ interface Uint256 {
 }
 
 contract Uint256Test {
-    Uint256 public stylusContract = Uint256(0x9bB4006025B0f8bE1B482835FCf43A457EFC945E);
+    Uint256 public stylusContract = Uint256(0x78DAcE49802601A30918d672f4B6fEA8E08bA0D8);
 
     function test_values(uint256[] memory values, uint256 runners)
         public view returns (uint, uint, uint, uint, uint, uint, uint, uint)

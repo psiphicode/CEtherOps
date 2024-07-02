@@ -234,17 +234,17 @@ void mul_mod(u256 res, u256 x, u256 y, u256 m) {
     udivrem(_, p, 8, m, res);
 }
 
-void _exp(u256 res, u256 x, u256 exponent) {
+void _exp(u256 res, u256 base, u256 exponent) {
     clear_words(&res[0], 4);
     res[0] = 1;
     u256 multiplier;
-    copy_words(&multiplier[0], &x[0], 4);
+    copy_words(&multiplier[0], &base[0], 4);
     int exp_bit_len = bit_len(exponent);
 
     int cur_bit = 0;
     u64 word = exponent[0];
     for (;cur_bit < exp_bit_len && cur_bit < 64; cur_bit++) {
-        if ((word&1) == 0) {
+        if ((word&1) == 1) {
             mul(res, res, multiplier);
         }
         squared(multiplier);
@@ -253,7 +253,7 @@ void _exp(u256 res, u256 x, u256 exponent) {
 
     word = exponent[1];
     for (;cur_bit < exp_bit_len && cur_bit < 128; cur_bit++) {
-        if ((word&1) == 0) {
+        if ((word&1) == 1) {
             mul(res, res, multiplier);
         }
         squared(multiplier);
@@ -262,7 +262,7 @@ void _exp(u256 res, u256 x, u256 exponent) {
 
     word = exponent[2];
     for (;cur_bit < exp_bit_len && cur_bit < 192; cur_bit++) {
-        if ((word&1) == 0) {
+        if ((word&1) == 1) {
             mul(res, res, multiplier);
         }
         squared(multiplier);
@@ -271,7 +271,7 @@ void _exp(u256 res, u256 x, u256 exponent) {
 
     word = exponent[3];
     for (;cur_bit < exp_bit_len && cur_bit < 256; cur_bit++) {
-        if ((word&1) == 0) {
+        if ((word&1) == 1) {
             mul(res, res, multiplier);
         }
         squared(multiplier);
