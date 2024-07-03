@@ -44,8 +44,11 @@ test/test_cases.go test/test_cases.c: scripts/gen_test_cases.py
 # Run all of the tests
 testpy: test/run.py scripts/gen_test_cases.py test/uint256.t.c test/test_cases.go test/uint256.t.go
 	python scripts/gen_test_cases.py 33
-	gcc -I./include -Wall -g -o test/uint256_test test/uint256.t.c test/test_cases.c src/uint256.c test/helpers.c
+	gcc -I./include -Wall -g -o test/ct_uint256 test/uint256.t.c test/test_cases.c src/uint256.c test/helpers.c
 	python test/run.py
+
+testsol: test/uint256.t.js
+	node test/uint256.t.js
 
 # Step 4: link
 build/uint256.wasm: $(OBJECTS)

@@ -35,9 +35,17 @@ make testpy
 I had trouble setting up a local testing environment using foundry. It appears that when foundry does a fork of a contract, it locally caches the storage and bytecode of the contract, then tests run against the cached state and code. The only problem is that it uses the EVM to execute the forked bytecode, but Stylus contracts require the wasmer runtime. Therefore, the Solidity test contract is deployed on the Arbitrum Sepolia testnet. See [uint256.t.sol](./test/uint256.t.sol) for the code. I compare the way EVM handles big integers in Solidity to the Stylus contract.
 
 
-Run the Solidity test:
+To run the Solidity test, first install the npm dependencies:
 ```sh
-node test/uint256_test.js
+npm install .
+```
+Then run the command:
+```sh
+make testsol
+```
+alternatively, run:
+```sh
+node test/uint256.t.js
 ```
 
 ## Build & Deploy
