@@ -13,35 +13,32 @@ There are 25 opcodes for integer operations. General descriptions of all EVM opc
 | Eq | IsZero | And | Or | Xor |
 | Not | Byte | Shl | Shr | Sar |
 
+## Design Goals
+The end goal of this project is to have an importable library in C Stylus contracts.
+```c
+#include <CEtherOps/uint256.h>
+```
+
+
 ## Testing
-The testing in this project is unconventional because I'm comparing the results of different implementations.
-- I compare the C implementation directly to the Golang implementation.
-    - Use Python to capture std output of the compiled C to the std output of the compiled Go code.
-    - These tests must get the same results for each Opcode invocation, then they must write the results to std output identically.
-    - I'm sure it's better to write each test's results to JSON and then compare them, but I did this as a quick first pass.
-- I compare the way EVM handles big integers in Solidity to the Stylus contract.
-    - Use Solidity/Yul contract to compute the opcode results then compare to the results of a cross-contract call to the Stylus contract.
-- TODO: I compare the way JavaScript handles big integers to the Stylus contract directly.
-    - Use JS to compute the integer operations, then compare to the results of calling the functions on the Sepolia testnet using ethers.
+The testing in this project is unconventional because I'm comparing the results of different implementations. The tests currently use randomly-generated integers. Passing tests only prove the correctness of subsets of all possible inputs and are not a guarantee of the safety of the code. The tests are currently lacking. The next iterations of testing will be more robust, probing for errors in edge cases. For example, in the `sar`, `shl`, etc. operations, the randomly generated integers will always be large enough to just set the result to zero. So I need to choose meaningful inputs to trigger different outcomes depending on the conditional branches of the operation.
 
-The tests use randomly-generated integers. Passing tests only prove the correctness of subsets of all possible inputs and are not a guarantee of the safety of the code.
+#### C vs Go
+I compare the C implementation directly to the Golang implementation by capturing the std output when executing the test binaries. See [run.py](./test/run.py) for the code. To put it simply, in both C and Go, we perform the same operations using the same integers, then write their elements to std out. The test is valid if the std output of the C implementation matches that of the Golang implementation. There's a risk of the operations being identical but the output being different, for example, if the programs write the result to std output with even a single deviation. However, if the output matches exactly, then that should be evidence of a passing test. In other words, there could be a false negative test, but I don't think there could be a false positive test.
 
-Run the Python test:
+Run the C/Go test:
 ```sh
 make testpy
 ```
+
+#### EVM vs Stylus
+I had trouble setting up a local testing environment using foundry. It appears that when foundry does a fork of a contract, it locally caches the storage and bytecode of the contract, then tests run against the cached state and code. The only problem is that it uses the EVM to execute the forked bytecode, but Stylus contracts require the wasmer runtime. Therefore, the Solidity test contract is deployed on the Arbitrum Sepolia testnet. See [uint256.t.sol](./test/uint256.t.sol) for the code. I compare the way EVM handles big integers in Solidity to the Stylus contract.
+
 
 Run the Solidity test:
 ```sh
 node test/uint256_test.js
 ```
-
-#### Passing Tests
-Both the C/Go tests and the Solidity/Yul and Stylus tests are passing now.
-
-#### TODO
-- Write the JS tests
-- Update the C/Go tests to write the results into JSON
 
 ## Build & Deploy
 To build the Stylus contract, run:
@@ -55,6 +52,11 @@ ENDPOINT=https://sepolia-rollup.arbitrum.io/rpc
 ```
 Then run the command:
 ```sh
-cargo stylus deploy --wasm-file=uint256.wasm --private-key=$PRIVATE_KEY --endpoint=$ENDPOINT
+cargo stylus deploy --wasm-file=build/uint256_stripped.wasm --private-key=$PRIVATE_KEY --endpoint=$ENDPOINT
 ```
+alternatively, run:
+```sh
+bash scripts/deploy.sh
+```
+
 Note that there's no real point to deploying this contract as it's still actively being developed and this was just a proof of concept.
