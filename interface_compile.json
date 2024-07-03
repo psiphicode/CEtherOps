@@ -6,14 +6,14 @@
       {
         "urls":
         [
-          "./uint256.sol"
+          "./src/uint256.sol"
         ]
       },
       "uint256_test":
       {
         "urls":
         [
-          "./test/uint256_test.sol"
+          "./test/uint256.t.sol"
         ]
       }
     },

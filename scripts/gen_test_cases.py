@@ -2,9 +2,7 @@ import sys
 import random
 
 
-
-C_TEMPLATE = """
-#include "uint256.h"
+C_TEMPLATE = """#include "uint256.h"
 
 
 int num_u256 = %s;
@@ -12,8 +10,7 @@ u256 test_cases_u256[] = {
 %s};
 """
 
-GO_TEMPLATE = """
-package main
+GO_TEMPLATE = """package main
 
 import "github.com/holiman/uint256"
 
@@ -35,13 +32,15 @@ def gen_uints(num_vals):
 def format_c(uints):
     c_array = ""
     for uint in uints:
-        c_array += "    {%sULL, %sULL, %sULL, %sULL},\n"%(uint[0], uint[1], uint[2], uint[3])
+        c_array += "    {%sULL, %sULL, %sULL, %sULL},\n"%(uint[0], uint[1],
+                                                          uint[2], uint[3])
     return c_array
 
 def format_go(uints):
     go_array = ""
     for uint in uints:
-        go_array += "    &uint256.Int{%s, %s, %s, %s},\n"%(uint[0], uint[1], uint[2], uint[3])
+        go_array += "    &uint256.Int{%s, %s, %s, %s},\n"%(uint[0], uint[1],
+                                                           uint[2], uint[3])
     return go_array
 
 if __name__ == '__main__':

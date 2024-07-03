@@ -2,12 +2,12 @@ import subprocess
 
 
 def fail_case(message):
-    print("---    Failure")
+    print("--- Failure")
     print(f"------ {message}")
 
 def run_c_test():
     print("------ Running C code")
-    c_result = subprocess.run('./test/uint256_test', capture_output=True)
+    c_result = subprocess.run('./test/ct_uint256', capture_output=True)
     if c_result.returncode != 0:
         fail_case(f"There was an error when running the C code:")
         raise Exception(c_result.stderr)
@@ -15,8 +15,8 @@ def run_c_test():
 
 def run_go_test():
     print("------ Running Go code")
-    go_result = subprocess.run(['go', 'run', 'test/uint256_t.go',
-                                'test/test_cases.go'],
+    go_result = subprocess.run(['go', 'run', './test/uint256.t.go',
+                                './test/test_cases.go'],
                                capture_output=True)
     if go_result.returncode != 0:
         fail_case(f"There was an error when running the Go code:")

@@ -11,9 +11,9 @@ function randomBigInt() {
 }
 
 const opcodes = [
-    'Add', 'Mul', 'Sub', 'Div', 'SDiv', 'Mod', 'SMod', 'AddMod', 'MulMod', 'Exp',
-    'SignExtend', 'Lt', 'Gt', 'Slt', 'Sgt', 'Eq', 'IsZero', 'And', 'Or', 'Xor',
-    'Not', 'Byte', 'Shl', 'Shr', 'Sar'
+    'Add', 'Mul', 'Sub', 'Div', 'SDiv', 'Mod', 'SMod', 'AddMod', 'MulMod',
+    'Exp', 'SignExtend', 'Lt', 'Gt', 'Slt', 'Sgt', 'Eq', 'IsZero', 'And', 'Or',
+    'Xor', 'Not', 'Byte', 'Shl', 'Shr', 'Sar'
 ];
 
 const bitmasks = [];
@@ -59,7 +59,7 @@ for (let i = 0; i < opcodes_to_test.length; i++) {
 async function main() {
     const provider = new ethers.JsonRpcProvider("https://sepolia-rollup.arbitrum.io/rpc")
 
-    const addr = JSON.parse(fs.readFileSync('test_address.json')).address;
+    const addr = JSON.parse(fs.readFileSync('./test/test_address.json')).address;
     console.log("address: ", addr);
 
     const abi = JSON.parse(fs.readFileSync('build/interface.json')).contracts.uint256_test.Uint256Test.abi;
