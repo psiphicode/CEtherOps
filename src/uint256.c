@@ -403,7 +403,7 @@ void byte(u256 res, u256 x, u256 i) {
     if (index >= 32 || ((i[1] | i[2] | i[3]) != 0)) {
         return;
     }
-    u64 number = x[0];
+    u64 number = x[4-1-index/8];
     u64 shift = 56 - ((index & 0x7) << 3); // 0 <= shift <= 56
     res[0] = shift > 0 ? (number >> shift) & 0xff : number & 0xff;
 }
