@@ -46,6 +46,12 @@ void sub(u256 res, u256 x, u256 y) {
             sub64(&res[3], x[3], y[3], carry);
 }
 
+void neg(u256 res, u256 x) {
+    u256 zero;
+    clear_words(&zero[0], 4);
+    sub(res, zero, x);
+}
+
 void div(u256 res, u256 x, u256 y) {
     clear_words(&res[0], 4);
     if (_is_zero(y) || greater_than(y, x)) {

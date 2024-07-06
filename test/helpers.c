@@ -1,11 +1,10 @@
 #include <stdbool.h>
-#include <uint256.h>
+#include <helpers.h>
 
 /*
     Helper functions
 */
 void revert() {
-    // asm("unreachable");
     return;
 }
 
@@ -253,12 +252,6 @@ bool less_than_uint64(u256 x, u64 n) {
 
 bool greater_than_uint64(u256 x, u64 n) {
     return (x[0] > n) || ((x[1] | x[2] | x[3]) != 0);
-}
-
-void neg(u256 res, u256 x) {
-    u256 zero;
-    clear_words(&zero[0], 4);
-    sub(res, zero, x);
 }
 
 int bit_len(u256 x) {
@@ -672,7 +665,7 @@ void rsh(u256 res, u256 x, u64 n) {
 }
 
 bool is_bit_set(u256 x, u64 n) {
-    return (x[n/64] & (1 << (n %64))) != 0;
+    return (x[n/64] & (1ULL << (n % 64))) != 0;
 }
 
 void srsh(u256 res, u256 x, u64 n) {

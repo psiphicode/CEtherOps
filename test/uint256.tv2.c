@@ -104,23 +104,56 @@ void test_mul() {
     u256 have;
     add(have, x, y);
 
-    verbose_assert_eq(have, want, "Mul", "Should succeed");
+    verbose_assert_eq(have, want, "Mul", "Product should be correct");
 }
 
 void test_sub() {
+    u256 x = {4, 0, 0, 0};
+    u256 y = {2, 0, 0, 0};
+    u256 want = {2, 0, 0, 0};
 
+    u256 have;
+    sub(have, x, y);
+
+    verbose_assert_eq(have, want, "Sub", "Difference should be correct");
 }
 
 void test_div() {
+    u256 x = {4, 0, 0, 0};
+    u256 y = {2, 0, 0, 0};
+    u256 want = {2, 0, 0, 0};
 
+    u256 have;
+    div(have, x, y);
+
+    verbose_assert_eq(have, want, "Div", "Division should be correct");
+
+    y[0] = 4;
+    want[0] = 1;
+    div(have, x, y);
+    verbose_assert_eq(have, want, "Div", "A number divided by itself is one");
 }
 
 void test_sdiv() {
+    u256 x = {10, 0, 0, 0};
+    u256 y = {2, 0, 0, 0};
+    u256 want = {5, 0, 0, 0};
 
+    u256 have;
+    sdiv(have, x, y);
+
+    verbose_assert_eq(have, want, "SDiv", "Should succeed");
 }
 
 void test_mod() {
+    u256 x = {7, 0, 0, 0};
+    u256 m = {2, 0, 0, 0};
+    u256 want = {7%2, 0, 0, 0};
 
+    u256 have;
+    mod(have, x, m);
+
+    verbose_assert_eq(have, want, "Mod", "Should succeed");
 }
 
 void test_smod() {
@@ -128,15 +161,38 @@ void test_smod() {
 }
 
 void test_add_mod() {
+    u256 x = {7, 0, 0, 0};
+    u256 y = {10, 0, 0, 0};
+    u256 m = {5, 0, 0, 0};
+    u256 want = {17%5, 0, 0, 0};
 
+    u256 have;
+    add_mod(have, x, y, m);
+
+    verbose_assert_eq(have, want, "AddMod", "Should succeed");
 }
 
 void test_mul_mod() {
+    u256 x = {7, 0, 0, 0};
+    u256 y = {10, 0, 0, 0};
+    u256 m = {5, 0, 0, 0};
+    u256 want = {70%5, 0, 0, 0};
 
+    u256 have;
+    mul_mod(have, x, y, m);
+
+    verbose_assert_eq(have, want, "MulMod", "Should succeed");
 }
 
 void test__exp() {
+    u256 x = {7, 0, 0, 0};
+    u256 y = {3, 0, 0, 0};
+    u256 want = {343, 0, 0, 0};
 
+    u256 have;
+    _exp(have, x, y);
+
+    verbose_assert_eq(have, want, "Exp", "Should succeed");
 }
 
 void test_sign_extend() {
@@ -149,23 +205,110 @@ void test_sign_extend() {
     I handpicked most of the cases for the comparison tests.
 */
 void test_lt() {
+    u256 x = {1, 0, 0, 0};
+    u256 y = {1, 0, 0, 0};
+    bool want = false;
+
+    bool have = lt(x, y);
+
+    verbose_assert_bool(have, want, "Lt", "Should be false when equal");
+
+    x[0] = 10;
+    have = lt(x, y);
+
+    verbose_assert_bool(have, want, "Lt", "Should be false when greater than");
+
+    x[0] = 0;
+    want = true;
+    have = lt(x, y);
+
+    verbose_assert_bool(have, want, "Lt", "Should be true when less than");
 
 }
 
 void test_gt() {
+    u256 x = {1, 0, 0, 0};
+    u256 y = {1, 0, 0, 0};
+    bool want = false;
 
+    bool have = gt(x, y);
+
+    verbose_assert_bool(have, want, "Gt", "Should be false when equal");
+
+    x[0] = 0;
+    have = gt(x, y);
+
+    verbose_assert_bool(have, want, "Gt", "Should be false when less than");
+
+    x[0] = 2;
+    want = true;
+    have = gt(x, y);
+
+    verbose_assert_bool(have, want, "Gt", "Should be true when greater than");
 }
 
 void test_slt() {
+    u256 x = {MAX_U64, MAX_U64, MAX_U64, MAX_U64}; // x = -1
+    u256 y = {1, 0, 0, 0};                         // y = 1
+    bool want = true;
 
+    bool have = slt(x, y);
+
+    verbose_assert_bool(have, want, "Slt",
+        "Negative number should be less than a positive number");
+
+    y[0] = 0;                                      // y = 0
+    have = slt(x, y);
+
+    verbose_assert_bool(have, want, "Slt",
+        "Negative number should be less than zero");
+
+    copy_words(&y[0], &x[0], 4);                   // y = -1
+    x[0] -=1;                                      // x = -2
+
+    have = slt(x, y);
+    verbose_assert_bool(have, want, "Slt",
+        "More negative number should be less than less negative number");
 }
 
 void test_sgt() {
+    u256 x = {1, 0, 0, 0};                         // x = 1
+    u256 y = {MAX_U64, MAX_U64, MAX_U64, MAX_U64}; // y = -1
+    bool want = true;
 
+    bool have = sgt(x, y);
+
+    verbose_assert_bool(have, want, "Sgt",
+        "Positive number should be greater than a negative number");
+
+    clear_words(&y[0], 4);                         // y = 0
+    have = sgt(x, y);
+
+    verbose_assert_bool(have, want, "Sgt",
+        "Positive number should be greater than zero");
+
+    copy_words(&y[0], &x[0], 4);                   // y = 1
+    x[0] +=1;                                      // x = 2
+
+    have = sgt(x, y);
+    verbose_assert_bool(have, want, "Sgt",
+        "More positive number should be greater than less positive number");
 }
 
 void test_eq() {
+    u256 x = {1, 0, 0, 0};
+    u256 y = {1, 0, 0, 0};
+    bool want = true;
 
+    bool have = eq(x, y);
+
+    verbose_assert_bool(have, want, "Eq", "Should be true when equal");
+
+    x[0] = 0;
+    want = false;
+    have = eq(x, y);
+
+    verbose_assert_bool(have, want, "Eq", "Should be false when not equal");
 }
 
 void test_is_zero() {
@@ -174,13 +317,13 @@ void test_is_zero() {
 
     bool have = is_zero(x);
 
-    verbose_assert_bool(have, want, "IsZero", "Should be nonzero");
+    verbose_assert_bool(have, want, "IsZero", "Should be false when nonzero");
 
     x[0] = 0;
     want = true;
     have = is_zero(x);
 
-    verbose_assert_bool(have, want, "IsZero", "Should be zero");
+    verbose_assert_bool(have, want, "IsZero", "Should be true when zero");
 }
 
 /*
@@ -308,7 +451,7 @@ void test_byte() {
         0x0000000000000000
     };
     u256 have;    // result of operation
-    char msg[32]; // expected behavior of test
+    char msg[32]; // test message depends on which byte is being checked
 
     // check each word
     for (int word = 0; word < 4; word++) {
@@ -356,6 +499,12 @@ void test_shl() {
     shl(have, x, shift);
 
     verbose_assert_eq(have, want, "Shl", "Should left shift by 3 bits");
+
+    shift[0] = 256;
+    clear_words(&want[0], 4);
+    shl(have, x, shift);
+
+    verbose_assert_eq(have, want, "Shl", "Maximum left shift should return 0");
 }
 
 void test_shr() {
@@ -366,7 +515,7 @@ void test_shr() {
         0b1110001111111111111111111111111111111111111111111111111111000111
     };
     u256 shift = {3, 0, 0, 0};
-    // Note: shift left zero pads on left side of most significant word
+    // Note: shift right zero pads on left side of most significant word
     u256 want = {
         0b1111110001111111111111111111111111111111111111111111111111111000,
         0b1111110001111111111111111111111111111111111111111111111111111000,
@@ -378,10 +527,15 @@ void test_shr() {
     shr(have, x, shift);
 
     verbose_assert_eq(have, want, "Shr", "Should right shift by 3 bits");
+
+    shift[0] = 256;
+    clear_words(&want[0], 4);
+    shr(have, x, shift);
+
+    verbose_assert_eq(have, want, "Shr", "Maximum right shift should return 0");
 }
 
 void test_sar() {
-    // There are several cases to test here! Need to implement more
     u256 x = {
         0b1110001111111111111111111111111111111111111111111111111111000111,
         0b1110001111111111111111111111111111111111111111111111111111000111,
@@ -393,17 +547,43 @@ void test_sar() {
         0b1111110001111111111111111111111111111111111111111111111111111000,
         0b1111110001111111111111111111111111111111111111111111111111111000,
         0b1111110001111111111111111111111111111111111111111111111111111000,
-        0b0001110001111111111111111111111111111111111111111111111111111000
+        0b1111110001111111111111111111111111111111111111111111111111111000
     };
 
     u256 have;
-    shr(have, x, shift);
+    sar(have, x, shift);
 
-    verbose_assert_eq(have, want, "Sar", "Should right shift by 3 bits");
+    verbose_assert_eq(have, want, "Sar",
+        "Shift right for negative value should fill left with 1s");
+
+    x[3] = 0b0110001111111111111111111111111111111111111111111111111111000111;
+    want[3] =
+        0b0000110001111111111111111111111111111111111111111111111111111000;
+
+    sar(have, x, shift);
+
+    verbose_assert_eq(have, want, "Sar",
+        "Shift right for positive value should fill left with 0s");
+
+    shift[0] = 256;
+    clear_words(&want[0], 4);
+    sar(have, x, shift);
+
+    verbose_assert_eq(have, want, "Sar",
+        "Maximum shift right for positive value should return all 0s");
+
+    x[3] = 0b1000000000000000000000000000000000000000000000000000000000000000;
+    want[0] = 0xffffffffffffffffULL;
+    want[1] = 0xffffffffffffffffULL;
+    want[2] = 0xffffffffffffffffULL;
+    want[3] = 0xffffffffffffffffULL;
+    sar(have, x, shift);
+
+    verbose_assert_eq(have, want, "Sar",
+        "Maximum shift right for negative value should return all 1s");
 }
 
 int main() {
-    // REFACTOR: Either a macro or a function pointer, print messages for pass
     //////////////////////////// Arithmetic tests
     test_add();
     test_mul();
@@ -435,5 +615,5 @@ int main() {
     test_shr();
     test_sar();
 
-    printf("All tests passed.\n");
+    printf("All tests passed!\n");
 }

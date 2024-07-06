@@ -32,7 +32,6 @@ void set_all_one(u256 x);
 int sign(u256 x);
 bool less_than_uint64(u256 x, u64 n);
 bool greater_than_uint64(u256 x, u64 n);
-void neg(u256 res, u256 x);
 int bit_len(u256 x);
 
 u64 reciprocal2by1(const u64 d);
