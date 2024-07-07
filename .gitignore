@@ -5,3 +5,4 @@ interface-gen
 uint256.wasm
 test/test_cases.*
 test/ct_uint256
+test/lib*
