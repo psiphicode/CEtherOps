@@ -501,17 +501,17 @@ void squared(u256 x) {
     u64 res0, res1, res2, res3;
 
     mul64(&carry0, &res0, x[0], x[0]);
-	umul_hop(&carry0, &res1, carry0, x[0], x[1]);
-	umul_hop(&carry0, &res2, carry0, x[0], x[2]);
+    umul_hop(&carry0, &res1, carry0, x[0], x[1]);
+    umul_hop(&carry0, &res2, carry0, x[0], x[2]);
 
-	umul_hop(&carry1, &res1, res1, x[0], x[1]);
-	umul_step(&carry1, &res2, res2, x[1], x[1], carry1);
+    umul_hop(&carry1, &res1, res1, x[0], x[1]);
+    umul_step(&carry1, &res2, res2, x[1], x[1], carry1);
 
-	umul_hop(&carry2, &res2, res2, x[0], x[2]);
+    umul_hop(&carry2, &res2, res2, x[0], x[2]);
 
-	res3 = 2*(x[0]*x[3]+x[1]*x[2]) + carry0 + carry1 + carry2;
+    res3 = 2*(x[0]*x[3]+x[1]*x[2]) + carry0 + carry1 + carry2;
 
-	x[0] = res0;
+    x[0] = res0;
     x[1] = res1;
     x[2] = res2;
     x[3] = res3;
@@ -1067,76 +1067,76 @@ void reduce4(u256 res, u512 x, u256 m, u64 *mu) {
     mul64(&t1, &t0, x3, mu[4]); c = add64(&q3, q3, t0, c); c = add64(&q4, q4, t1, c); add64(&q5, q5, 0, c);
 
     q0 = q1;
-	q1 = q2;
-	q2 = q3;
-	q3 = q4;
-	q4 = q5;
+    q1 = q2;
+    q2 = q3;
+    q3 = q4;
+    q4 = q5;
 
-	x0 = x[0];
-	x1 = x[1];
-	x2 = x[2];
-	x3 = x[3];
-	x4 = x[4];
+    x0 = x[0];
+    x1 = x[1];
+    x2 = x[2];
+    x3 = x[3];
+    x4 = x[4];
 
     u64 r0, r1, r2, r3, r4;
 
-	mul64(&r4, &r3, q0, m[3]);
-	mul64( &_, &t0, q1, m[3]); add64(&r4, r4, t0, 0);
+    mul64(&r4, &r3, q0, m[3]);
+    mul64( &_, &t0, q1, m[3]); add64(&r4, r4, t0, 0);
 
-	mul64(&t1, &r2, q0, m[2]);	c = add64(&r3, r3, t1, 0);
-	mul64( &_, &t0, q2, m[2]);      add64(&r4, r4, t0, c);
+    mul64(&t1, &r2, q0, m[2]);    c = add64(&r3, r3, t1, 0);
+    mul64( &_, &t0, q2, m[2]);      add64(&r4, r4, t0, c);
 
-	mul64(&t1, &t0, q1, m[2]); c = add64(&r3, r3, t0, 0); add64(&r4, r4, t1, c);
+    mul64(&t1, &t0, q1, m[2]); c = add64(&r3, r3, t0, 0); add64(&r4, r4, t1, c);
 
-	mul64(&t1, &r1, q0, m[1]); c = add64(&r2, r2, t1, 0);
-	mul64(&t1, &t0, q2, m[1]); c = add64(&r3, r3, t0, c); add64(&r4, r4, t1, c);
+    mul64(&t1, &r1, q0, m[1]); c = add64(&r2, r2, t1, 0);
+    mul64(&t1, &t0, q2, m[1]); c = add64(&r3, r3, t0, c); add64(&r4, r4, t1, c);
 
-	mul64(&t1, &t0, q1, m[1]); c = add64(&r2, r2, t0, 0); c = add64(&r3, r3, t1, c);
-	mul64(&_,  &t0, q3, m[1]);     add64(&r4, r4, t0, c);
+    mul64(&t1, &t0, q1, m[1]); c = add64(&r2, r2, t0, 0); c = add64(&r3, r3, t1, c);
+    mul64(&_,  &t0, q3, m[1]);     add64(&r4, r4, t0, c);
 
-	mul64(&t1, &r0, q0, m[0]); c = add64(&r1, r1, t1, 0);
-	mul64(&t1, &t0, q2, m[0]); c = add64(&r2, r2, t0, c); c = add64(&r3, r3, t1, c);
-	mul64( &_, &t0, q4, m[0]);     add64(&r4, r4, t0, c);
+    mul64(&t1, &r0, q0, m[0]); c = add64(&r1, r1, t1, 0);
+    mul64(&t1, &t0, q2, m[0]); c = add64(&r2, r2, t0, c); c = add64(&r3, r3, t1, c);
+    mul64( &_, &t0, q4, m[0]);     add64(&r4, r4, t0, c);
 
-	mul64(&t1, &t0, q1, m[0]); c = add64(&r1, r1, t0, 0); c = add64(&r2, r2, t1, c);
-	mul64(&t1, &t0, q3, m[0]); c = add64(&r3, r3, t0, c);     add64(&r4, r4, t1, c);
+    mul64(&t1, &t0, q1, m[0]); c = add64(&r1, r1, t0, 0); c = add64(&r2, r2, t1, c);
+    mul64(&t1, &t0, q3, m[0]); c = add64(&r3, r3, t0, c);     add64(&r4, r4, t1, c);
 
 
-	u64 b;
+    u64 b;
 
-	b = sub64(&r0, x0, r0, 0);
-	b = sub64(&r1, x1, r1, b);
-	b = sub64(&r2, x2, r2, b);
-	b = sub64(&r3, x3, r3, b);
-	b = sub64(&r4, x4, r4, b);
+    b = sub64(&r0, x0, r0, 0);
+    b = sub64(&r1, x1, r1, b);
+    b = sub64(&r2, x2, r2, b);
+    b = sub64(&r3, x3, r3, b);
+    b = sub64(&r4, x4, r4, b);
 
-	if (b != 0) {
-		c = add64(&r0, r0, m[0], 0);
-		c = add64(&r1, r1, m[1], c);
-		c = add64(&r2, r2, m[2], c);
-		c = add64(&r3, r3, m[3], c);
-		    add64(&r4, r4,    0, c);
-	}
+    if (b != 0) {
+        c = add64(&r0, r0, m[0], 0);
+        c = add64(&r1, r1, m[1], c);
+        c = add64(&r2, r2, m[2], c);
+        c = add64(&r3, r3, m[3], c);
+            add64(&r4, r4,    0, c);
+    }
 
-	while (true) {
-		b = sub64(&q0, r0, m[0], 0);
-		b = sub64(&q1, r1, m[1], b);
-		b = sub64(&q2, r2, m[2], b);
-		b = sub64(&q3, r3, m[3], b);
-		b = sub64(&q4, r4,    0, b);
+    while (true) {
+        b = sub64(&q0, r0, m[0], 0);
+        b = sub64(&q1, r1, m[1], b);
+        b = sub64(&q2, r2, m[2], b);
+        b = sub64(&q3, r3, m[3], b);
+        b = sub64(&q4, r4,    0, b);
 
-		if (b != 0) {
-			break;
-		}
+        if (b != 0) {
+            break;
+        }
 
-		r4 = q4;
+        r4 = q4;
         r3 = q3;
         r2 = q2;
         r1 = q1;
         r0 = q0;
-	}
+    }
 
-	res[3] = r3;
+    res[3] = r3;
     res[2] = r2;
     res[1] = r1;
     res[0] = r0;

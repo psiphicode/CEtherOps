@@ -1,55 +1,55 @@
 package main
 
 import (
-	"fmt"
-	"github.com/holiman/uint256"
+    "fmt"
+    "github.com/holiman/uint256"
 )
 
 func load_u256(u *uint256.Int, i int) {
-	u.Set(test_cases_u256[i])
+    u.Set(test_cases_u256[i])
 }
 
 func print_uint(label string, x *uint256.Int) {
-	fmt.Println(label+"[0]:", x[0])
-	fmt.Println(label+"[1]:", x[1])
-	fmt.Println(label+"[2]:", x[2])
-	fmt.Println(label+"[3]:", x[3])
+    fmt.Println(label+"[0]:", x[0])
+    fmt.Println(label+"[1]:", x[1])
+    fmt.Println(label+"[2]:", x[2])
+    fmt.Println(label+"[3]:", x[3])
 }
 
 func tf(v bool) int {
-	if v {
-		return 1
-	}
-	return 0
+    if v {
+        return 1
+    }
+    return 0
 }
 
 func opSHL(res, x, y *uint256.Int) {
-	if y.LtUint64(256) {
-		res.Lsh(x, uint(y.Uint64()))
-	} else {
-		res.Clear()
-	}
+    if y.LtUint64(256) {
+        res.Lsh(x, uint(y.Uint64()))
+    } else {
+        res.Clear()
+    }
 }
 
 func opSHR(res, x, y *uint256.Int) {
-	if y.LtUint64(256) {
-		res.Rsh(x, uint(y.Uint64()))
-	} else {
-		res.Clear()
-	}
+    if y.LtUint64(256) {
+        res.Rsh(x, uint(y.Uint64()))
+    } else {
+        res.Clear()
+    }
 }
 
 func opSAR(res, value, shift *uint256.Int) {
-	if shift.GtUint64(256) {
-		if value.Sign() >= 0 {
-			res.Clear()
-		} else {
-			res.SetAllOne()
-		}
-		return
-	}
-	n := uint(shift.Uint64())
-	res.SRsh(value, n)
+    if shift.GtUint64(256) {
+        if value.Sign() >= 0 {
+            res.Clear()
+        } else {
+            res.SetAllOne()
+        }
+        return
+    }
+    n := uint(shift.Uint64())
+    res.SRsh(value, n)
 }
 
 func test_run(i int, res, x, y, z *uint256.Int) {
@@ -158,17 +158,17 @@ func test_run(i int, res, x, y, z *uint256.Int) {
 }
 
 func main() {
-	var res *uint256.Int = &uint256.Int{}
-	var x *uint256.Int = &uint256.Int{}
-	var y *uint256.Int = &uint256.Int{}
-	var z *uint256.Int = &uint256.Int{}
+    var res *uint256.Int = &uint256.Int{}
+    var x *uint256.Int = &uint256.Int{}
+    var y *uint256.Int = &uint256.Int{}
+    var z *uint256.Int = &uint256.Int{}
 
-	for i:=0; i < len(test_cases_u256) - 3; i+= 3 {
-		load_u256(x, i)
-		load_u256(y, i+1)
-		load_u256(z, i+2)
-		test_run(i/3, res, x, y, z)
-	}
+    for i:=0; i < len(test_cases_u256) - 3; i+= 3 {
+        load_u256(x, i)
+        load_u256(y, i+1)
+        load_u256(z, i+2)
+        test_run(i/3, res, x, y, z)
+    }
 
     base := uint256.NewInt(42069)
     exponent := uint256.NewInt(344)

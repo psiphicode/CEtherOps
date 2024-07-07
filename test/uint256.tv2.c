@@ -23,7 +23,8 @@ void assert_eq(u256 have, u256 want) {
 }
 
 // Check for eqality and print a friendly message then trigger assertion error
-void verbose_assert_eq(u256 have, u256 want, char name[], char msg[]) {
+void verbose_assert_eq(u256 have, u256 want, char name[], char msg[],
+                       bool verbose) {
     if ((have[0] != want[0]) || (have[1] != want[1])
      || (have[2] != want[2]) || (have[3] != want[3]))
     {
@@ -32,13 +33,15 @@ void verbose_assert_eq(u256 have, u256 want, char name[], char msg[]) {
         print_uint("have", have);
         assert_eq(have, want);
     } else {
-        // success message?
-        printf("%s succeeded: %s\n", name, msg);
+        if (verbose) {
+            printf("%s succeeded: %s\n", name, msg);
+        }
     }
 }
 
 // Check a boolean and print a friendly message then trigger assertion error
-void verbose_assert_bool(bool have, bool want, char name[], char msg[]) {
+void verbose_assert_bool(bool have, bool want, char name[], char msg[],
+                         bool verbose) {
     if (have != want)
     {
         printf("%s failed: %s\n", name, msg);
@@ -46,8 +49,9 @@ void verbose_assert_bool(bool have, bool want, char name[], char msg[]) {
         printf("have %s", have ? "true" : "false");
         assert(have == want);
     } else {
-        // success message?
-        printf("%s succeeded: %s\n", name, msg);
+        if (verbose) {
+            printf("%s succeeded: %s\n", name, msg);
+        }
     }
 }
 
@@ -73,27 +77,31 @@ void test_add() {
     u256 have;
     add(have, x, y);
 
-    verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly");
+    verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly",
+                      true);
 
     x[1] = MAX_U64;
     want[1] = 0;
     want[2] = 1;
     add(have, x, y);
 
-    verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly");
+    verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly",
+                      true);
 
     x[2] = MAX_U64;
     want[2] = 0;
     want[3] = 1;
     add(have, x, y);
 
-    verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly");
+    verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly",
+                      true);
 
     x[3] = MAX_U64;
     want[3] = 0;
     add(have, x, y);
 
-    verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly");
+    verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly",
+                      true);
 }
 
 void test_mul() {
@@ -104,7 +112,8 @@ void test_mul() {
     u256 have;
     add(have, x, y);
 
-    verbose_assert_eq(have, want, "Mul", "Product should be correct");
+    verbose_assert_eq(have, want, "Mul", "Product should be correct",
+                      true);
 }
 
 void test_sub() {
@@ -115,7 +124,8 @@ void test_sub() {
     u256 have;
     sub(have, x, y);
 
-    verbose_assert_eq(have, want, "Sub", "Difference should be correct");
+    verbose_assert_eq(have, want, "Sub", "Difference should be correct",
+                      true);
 }
 
 void test_div() {
@@ -126,12 +136,13 @@ void test_div() {
     u256 have;
     div(have, x, y);
 
-    verbose_assert_eq(have, want, "Div", "Division should be correct");
+    verbose_assert_eq(have, want, "Div", "Division should be correct", true);
 
     y[0] = 4;
     want[0] = 1;
     div(have, x, y);
-    verbose_assert_eq(have, want, "Div", "A number divided by itself is one");
+    verbose_assert_eq(have, want, "Div", "A number divided by itself is one",
+                      true);
 }
 
 void test_sdiv() {
@@ -142,7 +153,7 @@ void test_sdiv() {
     u256 have;
     sdiv(have, x, y);
 
-    verbose_assert_eq(have, want, "SDiv", "Should succeed");
+    verbose_assert_eq(have, want, "SDiv", "Should succeed", true);
 }
 
 void test_mod() {
@@ -153,7 +164,7 @@ void test_mod() {
     u256 have;
     mod(have, x, m);
 
-    verbose_assert_eq(have, want, "Mod", "Should succeed");
+    verbose_assert_eq(have, want, "Mod", "Should succeed", true);
 }
 
 void test_smod() {
@@ -169,7 +180,7 @@ void test_add_mod() {
     u256 have;
     add_mod(have, x, y, m);
 
-    verbose_assert_eq(have, want, "AddMod", "Should succeed");
+    verbose_assert_eq(have, want, "AddMod", "Should succeed", true);
 }
 
 void test_mul_mod() {
@@ -181,7 +192,7 @@ void test_mul_mod() {
     u256 have;
     mul_mod(have, x, y, m);
 
-    verbose_assert_eq(have, want, "MulMod", "Should succeed");
+    verbose_assert_eq(have, want, "MulMod", "Should succeed", true);
 }
 
 void test__exp() {
@@ -192,7 +203,7 @@ void test__exp() {
     u256 have;
     _exp(have, x, y);
 
-    verbose_assert_eq(have, want, "Exp", "Should succeed");
+    verbose_assert_eq(have, want, "Exp", "Should succeed", true);
 }
 
 void test_sign_extend() {
@@ -211,18 +222,20 @@ void test_lt() {
 
     bool have = lt(x, y);
 
-    verbose_assert_bool(have, want, "Lt", "Should be false when equal");
+    verbose_assert_bool(have, want, "Lt", "Should be false when equal", true);
 
     x[0] = 10;
     have = lt(x, y);
 
-    verbose_assert_bool(have, want, "Lt", "Should be false when greater than");
+    verbose_assert_bool(have, want, "Lt", "Should be false when greater than",
+                        true);
 
     x[0] = 0;
     want = true;
     have = lt(x, y);
 
-    verbose_assert_bool(have, want, "Lt", "Should be true when less than");
+    verbose_assert_bool(have, want, "Lt", "Should be true when less than",
+                        true);
 
 }
 
@@ -233,18 +246,20 @@ void test_gt() {
 
     bool have = gt(x, y);
 
-    verbose_assert_bool(have, want, "Gt", "Should be false when equal");
+    verbose_assert_bool(have, want, "Gt", "Should be false when equal", true);
 
     x[0] = 0;
     have = gt(x, y);
 
-    verbose_assert_bool(have, want, "Gt", "Should be false when less than");
+    verbose_assert_bool(have, want, "Gt", "Should be false when less than",
+                        true);
 
     x[0] = 2;
     want = true;
     have = gt(x, y);
 
-    verbose_assert_bool(have, want, "Gt", "Should be true when greater than");
+    verbose_assert_bool(have, want, "Gt", "Should be true when greater than",
+                        true);
 }
 
 void test_slt() {
@@ -255,20 +270,20 @@ void test_slt() {
     bool have = slt(x, y);
 
     verbose_assert_bool(have, want, "Slt",
-        "Negative number should be less than a positive number");
+        "Negative number should be less than a positive number", true);
 
     y[0] = 0;                                      // y = 0
     have = slt(x, y);
 
     verbose_assert_bool(have, want, "Slt",
-        "Negative number should be less than zero");
+        "Negative number should be less than zero", true);
 
     copy_words(&y[0], &x[0], 4);                   // y = -1
     x[0] -=1;                                      // x = -2
 
     have = slt(x, y);
     verbose_assert_bool(have, want, "Slt",
-        "More negative number should be less than less negative number");
+        "More negative number should be less than less negative number", true);
 }
 
 void test_sgt() {
@@ -279,20 +294,21 @@ void test_sgt() {
     bool have = sgt(x, y);
 
     verbose_assert_bool(have, want, "Sgt",
-        "Positive number should be greater than a negative number");
+        "Positive number should be greater than a negative number", true);
 
     clear_words(&y[0], 4);                         // y = 0
     have = sgt(x, y);
 
     verbose_assert_bool(have, want, "Sgt",
-        "Positive number should be greater than zero");
+        "Positive number should be greater than zero", true);
 
     copy_words(&y[0], &x[0], 4);                   // y = 1
     x[0] +=1;                                      // x = 2
 
     have = sgt(x, y);
     verbose_assert_bool(have, want, "Sgt",
-        "More positive number should be greater than less positive number");
+        "More positive number should be greater than less positive number",
+        true);
 }
 
 void test_eq() {
@@ -302,13 +318,14 @@ void test_eq() {
 
     bool have = eq(x, y);
 
-    verbose_assert_bool(have, want, "Eq", "Should be true when equal");
+    verbose_assert_bool(have, want, "Eq", "Should be true when equal", true);
 
     x[0] = 0;
     want = false;
     have = eq(x, y);
 
-    verbose_assert_bool(have, want, "Eq", "Should be false when not equal");
+    verbose_assert_bool(have, want, "Eq", "Should be false when not equal",
+                        true);
 }
 
 void test_is_zero() {
@@ -317,13 +334,14 @@ void test_is_zero() {
 
     bool have = is_zero(x);
 
-    verbose_assert_bool(have, want, "IsZero", "Should be false when nonzero");
+    verbose_assert_bool(have, want, "IsZero", "Should be false when nonzero",
+                        true);
 
     x[0] = 0;
     want = true;
     have = is_zero(x);
 
-    verbose_assert_bool(have, want, "IsZero", "Should be true when zero");
+    verbose_assert_bool(have, want, "IsZero", "Should be true when zero", true);
 }
 
 /*
@@ -356,7 +374,7 @@ void test_and() {
     u256 have;
     and(have, x, y);
 
-    verbose_assert_eq(have, want, "And", "Should succeed");
+    verbose_assert_eq(have, want, "And", "Should succeed", true);
 }
 
 void test_or() {
@@ -382,7 +400,7 @@ void test_or() {
     u256 have;
     or(have, x, y);
 
-    verbose_assert_eq(have, want, "Or", "Should succeed");
+    verbose_assert_eq(have, want, "Or", "Should succeed", true);
 }
 
 void test_xor() {
@@ -408,7 +426,7 @@ void test_xor() {
     u256 have;
     xor(have, x, y);
 
-    verbose_assert_eq(have, want, "Xor", "Should succeed");
+    verbose_assert_eq(have, want, "Xor", "Should succeed", true);
 }
 
 void test_not() {
@@ -428,7 +446,7 @@ void test_not() {
     u256 have;
     not(have, x);
 
-    verbose_assert_eq(have, want, "Not", "Should succeed");
+    verbose_assert_eq(have, want, "Not", "Should succeed", true);
 }
 
 void test_byte() {
@@ -474,7 +492,7 @@ void test_byte() {
             i[0] -= 1;
             byte(have, x, i);
             sprintf(msg, "Should retrieve byte %lu", i[0]);
-            verbose_assert_eq(have, want, "Byte", msg);
+            verbose_assert_eq(have, want, "Byte", msg, false);
         }
     }
 }
@@ -498,13 +516,14 @@ void test_shl() {
     u256 have;
     shl(have, x, shift);
 
-    verbose_assert_eq(have, want, "Shl", "Should left shift by 3 bits");
+    verbose_assert_eq(have, want, "Shl", "Should left shift by 3 bits", true);
 
     shift[0] = 256;
     clear_words(&want[0], 4);
     shl(have, x, shift);
 
-    verbose_assert_eq(have, want, "Shl", "Maximum left shift should return 0");
+    verbose_assert_eq(have, want, "Shl", "Maximum left shift should return 0",
+                      true);
 }
 
 void test_shr() {
@@ -526,13 +545,14 @@ void test_shr() {
     u256 have;
     shr(have, x, shift);
 
-    verbose_assert_eq(have, want, "Shr", "Should right shift by 3 bits");
+    verbose_assert_eq(have, want, "Shr", "Should right shift by 3 bits", true);
 
     shift[0] = 256;
     clear_words(&want[0], 4);
     shr(have, x, shift);
 
-    verbose_assert_eq(have, want, "Shr", "Maximum right shift should return 0");
+    verbose_assert_eq(have, want, "Shr", "Maximum right shift should return 0",
+                      true);
 }
 
 void test_sar() {
@@ -554,7 +574,7 @@ void test_sar() {
     sar(have, x, shift);
 
     verbose_assert_eq(have, want, "Sar",
-        "Shift right for negative value should fill left with 1s");
+        "Shift right for negative value should fill left with 1s", true);
 
     x[3] = 0b0110001111111111111111111111111111111111111111111111111111000111;
     want[3] =
@@ -563,14 +583,14 @@ void test_sar() {
     sar(have, x, shift);
 
     verbose_assert_eq(have, want, "Sar",
-        "Shift right for positive value should fill left with 0s");
+        "Shift right for positive value should fill left with 0s", true);
 
     shift[0] = 256;
     clear_words(&want[0], 4);
     sar(have, x, shift);
 
     verbose_assert_eq(have, want, "Sar",
-        "Maximum shift right for positive value should return all 0s");
+        "Maximum shift right for positive value should return all 0s", true);
 
     x[3] = 0b1000000000000000000000000000000000000000000000000000000000000000;
     want[0] = 0xffffffffffffffffULL;
@@ -580,7 +600,14 @@ void test_sar() {
     sar(have, x, shift);
 
     verbose_assert_eq(have, want, "Sar",
-        "Maximum shift right for negative value should return all 1s");
+        "Maximum shift right for negative value should return all 1s", true);
+}
+
+/*
+    Randomized tests
+*/
+void test_add_random() {
+
 }
 
 int main() {

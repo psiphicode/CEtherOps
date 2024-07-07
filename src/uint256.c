@@ -28,14 +28,14 @@ void mul(u256 res, u256 x, u256 y) {
 
     mul64(&carry0, &res[0], x0, y0);
     umul_hop(&carry0, &res1, carry0, x1, y0);
-	umul_hop(&carry0, &res2, carry0, x2, y0);
+    umul_hop(&carry0, &res2, carry0, x2, y0);
 
-	umul_hop(&carry1, &res[1], res1, x0, y1);
-	umul_step(&carry1, &res2, res2, x1, y1, carry1);
+    umul_hop(&carry1, &res[1], res1, x0, y1);
+    umul_step(&carry1, &res2, res2, x1, y1, carry1);
 
-	umul_hop(&carry2, &res[2], res2, x0, y2);
+    umul_hop(&carry2, &res[2], res2, x0, y2);
 
-	res[3] = x3*y0 + x2*y1 + x0*y3 + x1*y2 + carry0 + carry1 + carry2;
+    res[3] = x3*y0 + x2*y1 + x0*y3 + x1*y2 + carry0 + carry1 + carry2;
 }
 
 void sub(u256 res, u256 x, u256 y) {
@@ -56,19 +56,19 @@ void div(u256 res, u256 x, u256 y) {
     clear_words(&res[0], 4);
     if (_is_zero(y) || greater_than(y, x)) {
         return;
-	}
-	if (_eq(x, y)) {
+    }
+    if (_eq(x, y)) {
         res[0] = 1;
-		return;
-	}
+        return;
+    }
 
-	if (is_uint64(x)) {
+    if (is_uint64(x)) {
         res[0] = x[0] / y[0];
-		return;
-	}
+        return;
+    }
 
     u256 _;
-	udivrem(res, x, 4, y, _);
+    udivrem(res, x, 4, y, _);
 }
 
 void sdiv(u256 res, u256 n, u256 d) {
