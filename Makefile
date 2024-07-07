@@ -51,7 +51,9 @@ testsol: test/uint256.t.js
 	node test/uint256.t.js
 
 testc:
-	gcc -I./include -Wall -g -o test/ct_uint256 test/uint256.tv2.c test/test_cases.c src/uint256.c test/helpers.c && ./test/ct_uint256
+	go build -o test/librandombytes.so -buildmode=c-shared test/randombytes.go
+	gcc -I./include -Wall -g -o test/ct_uint256 test/uint256.tv2.c test/test_cases.c src/uint256.c test/helpers.c -L./test -lrandombytes
+	@LD_LIBRARY_PATH="$(LD_LIBRARY_PATH):$(CURDIR)/test" ./test/ct_uint256
 
 # Step 4: link
 build/uint256.wasm: $(OBJECTS)

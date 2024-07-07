@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <assert.h>
 #include <uint256.h>
+#include "librandombytes.h"
 
 #define MAX_U64 0xffffffffffffffffULL
+#define NUM_TESTS 1000000
 
 
 /*
@@ -12,6 +14,10 @@
 void print_uint(const char *label, u256 x) {
     printf("%s[0]: %lu\n%s[1]: %lu\n%s[2]: %lu\n%s[3]: %lu\n",
            label, x[0], label, x[1], label, x[2], label, x[3]);
+}
+
+void go_gen_add_test(u256 x, u256 y, u256 res) {
+    GenAddTest((char*)x, (char*)y, (char*)res);
 }
 
 // Compare each word of two 256 bit integers
@@ -593,10 +599,7 @@ void test_sar() {
         "Maximum shift right for positive value should return all 0s", true);
 
     x[3] = 0b1000000000000000000000000000000000000000000000000000000000000000;
-    want[0] = 0xffffffffffffffffULL;
-    want[1] = 0xffffffffffffffffULL;
-    want[2] = 0xffffffffffffffffULL;
-    want[3] = 0xffffffffffffffffULL;
+    want[0] = MAX_U64; want[1] = MAX_U64; want[2] = MAX_U64; want[3] = MAX_U64;
     sar(have, x, shift);
 
     verbose_assert_eq(have, want, "Sar",
@@ -604,11 +607,369 @@ void test_sar() {
 }
 
 /*
-    Randomized tests
+    Randomized tests: arithmetic
 */
 void test_add_random() {
+    u256 x, y, have, want;
 
+    printf("Testing Add\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenAddTest((char*)x, (char*)y, (char*)want);
+        add(have, x, y);
+        verbose_assert_eq(have, want, "Add",
+                          "Random addition should match Go implementation",
+                          false);
+    }
 }
+
+void test_mul_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Mul\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenMulTest((char*)x, (char*)y, (char*)want);
+        mul(have, x, y);
+        verbose_assert_eq(have, want, "Mul",
+                          "Random multiply should match Go implementation",
+                          false);
+    }
+}
+
+void test_sub_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Sub\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenSubTest((char*)x, (char*)y, (char*)want);
+        sub(have, x, y);
+        verbose_assert_eq(have, want, "Sub",
+                          "Random subtraction should match Go implementation",
+                          false);
+    }
+}
+
+void test_div_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Div\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenDivTest((char*)x, (char*)y, (char*)want);
+        div(have, x, y);
+        verbose_assert_eq(have, want, "Div",
+                          "Random divide should match Go implementation",
+                          false);
+    }
+}
+
+void test_sdiv_random() {
+    u256 x, y, have, want;
+
+    printf("Testing SDiv\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenSDivTest((char*)x, (char*)y, (char*)want);
+        sdiv(have, x, y);
+        verbose_assert_eq(have, want, "SDiv",
+                          "Random signed divide should match Go implementation",
+                          false);
+    }
+}
+
+void test_mod_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Mod\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenModTest((char*)x, (char*)y, (char*)want);
+        mod(have, x, y);
+        verbose_assert_eq(have, want, "Mod",
+                          "Random modulus should match Go implementation",
+                          false);
+    }
+}
+
+void test_smod_random() {
+    u256 x, y, have, want;
+
+    printf("Testing SMod\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenSModTest((char*)x, (char*)y, (char*)want);
+        smod(have, x, y);
+        verbose_assert_eq(have, want, "SMod",
+                        "Random signed modulus should match Go implementation",
+                        false);
+    }
+}
+
+void test_add_mod_random() {
+    u256 x, y, m, have, want;
+
+    printf("Testing AddMod\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenAddModTest((char*)x, (char*)y, (char*)m, (char*)want);
+        add_mod(have, x, y, m);
+        verbose_assert_eq(have, want, "AddMod",
+                        "Random add mod should match Go implementation",
+                        false);
+    }
+}
+
+void test_mul_mod_random() {
+    u256 x, y, m, have, want;
+
+    printf("Testing MulMod\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenMulModTest((char*)x, (char*)y, (char*)m, (char*)want);
+        mul_mod(have, x, y, m);
+        verbose_assert_eq(have, want, "MulMod",
+                        "Random mul mod should match Go implementation",
+                        false);
+    }
+}
+
+void test__exp_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Exp\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenExpTest((char*)x, (char*)y, (char*)want);
+        _exp(have, x, y);
+        verbose_assert_eq(have, want, "Exp",
+                        "Random exponentiation should match Go implementation",
+                        false);
+    }
+}
+
+void test_sign_extend_random() {
+    u256 x, y, have, want;
+
+    printf("Testing SignExtend\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenSignExtendTest((char*)x, (char*)y, (char*)want);
+        sign_extend(have, x, y);
+        verbose_assert_eq(have, want, "SignExtend",
+                        "Random sign extension should match Go implementation",
+                        false);
+    }
+}
+
+/*
+    Randomized tests: comparison
+*/
+void test_lt_random() {
+    char r;
+    char *result = &r;
+
+    u256 x, y;
+
+    printf("Testing Lt\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenLtTest((char*)x, (char*)y, result);
+
+        bool want = r == 1 ? true : false;
+        bool have = lt(x, y);
+        verbose_assert_bool(have, want, "Lt",
+                        "Random less than should match Go implementation",
+                        false);
+    }
+}
+
+void test_gt_random() {
+    char r;
+    char *result = &r;
+
+    u256 x, y;
+
+    printf("Testing Gt\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenGtTest((char*)x, (char*)y, result);
+
+        bool want = r == 1 ? true : false;
+        bool have = gt(x, y);
+        verbose_assert_bool(have, want, "Gt",
+                        "Random greater than should match Go implementation",
+                        false);
+    }
+}
+
+void test_slt_random() {
+    char r;
+    char *result = &r;
+
+    u256 x, y;
+
+    printf("Testing Gt\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenSltTest((char*)x, (char*)y, result);
+
+        bool want = r == 1 ? true : false;
+        bool have = slt(x, y);
+        verbose_assert_bool(have, want, "Slt",
+                    "Random signed less than should match Go implementation",
+                    false);
+    }
+}
+
+void test_sgt_random() {
+    char r;
+    char *result = &r;
+
+    u256 x, y;
+
+    printf("Testing Sgt\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenSgtTest((char*)x, (char*)y, result);
+
+        bool want = r == 1 ? true : false;
+        bool have = sgt(x, y);
+        verbose_assert_bool(have, want, "Sgt",
+                    "Random signed greater than should match Go implementation",
+                    false);
+    }
+}
+
+void test_eq_random() {
+    char r;
+    char *result = &r;
+
+    u256 x, y;
+
+    printf("Testing Eq\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenEqTest((char*)x, (char*)y, result);
+
+        bool want = r == 1 ? true : false;
+        bool have = eq(x, y);
+        verbose_assert_bool(have, want, "Eq",
+                            "Random equals should match Go implementation",
+                            false);
+    }
+}
+
+void test_is_zero_random() {
+    char r;
+    char *result = &r;
+
+    u256 x;
+
+    printf("Testing IsZero\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenIsZeroTest((char*)x, result);
+
+        bool want = r == 1 ? true : false;
+        bool have = is_zero(x);
+        verbose_assert_bool(have, want, "IsZero",
+                            "Random is zero should match Go implementation",
+                            false);
+    }
+}
+
+/*
+    Randomized tests: bitwise
+*/
+void test_and_random() {
+    u256 x, y, have, want;
+
+    printf("Testing And\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenAndTest((char*)x, (char*)y, (char*)want);
+        and(have, x, y);
+        verbose_assert_eq(have, want, "And",
+                        "Random bitwise and should match Go implementation",
+                        false);
+    }
+}
+
+void test_or_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Or\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenOrTest((char*)x, (char*)y, (char*)want);
+        or(have, x, y);
+        verbose_assert_eq(have, want, "Or",
+                        "Random bitwise or should match Go implementation",
+                        false);
+    }
+}
+
+void test_xor_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Xor\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenXorTest((char*)x, (char*)y, (char*)want);
+        xor(have, x, y);
+        verbose_assert_eq(have, want, "Xor",
+                        "Random bitwise xor should match Go implementation",
+                        false);
+    }
+}
+
+void test_not_random() {
+    u256 x, have, want;
+
+    printf("Testing Not\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenNotTest((char*)x, (char*)want);
+        not(have, x);
+        verbose_assert_eq(have, want, "Not",
+                        "Random bitwise not should match Go implementation",
+                        false);
+    }
+}
+
+void test_byte_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Byte\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenByteTest((char*)x, (char*)y, (char*)want);
+        byte(have, x, y);
+        verbose_assert_eq(have, want, "Byte",
+                        "Random byte index should match Go implementation",
+                        false);
+    }
+}
+
+void test_shl_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Shl\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenShlTest((char*)x, (char*)y, (char*)want);
+        shl(have, x, y);
+        verbose_assert_eq(have, want, "Shl",
+                        "Random left shift should match Go implementation",
+                        false);
+    }
+}
+
+void test_shr_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Shr\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenShrTest((char*)x, (char*)y, (char*)want);
+        shr(have, x, y);
+        verbose_assert_eq(have, want, "Shl",
+                        "Random right shift should match Go implementation",
+                        false);
+    }
+}
+
+void test_sar_random() {
+    u256 x, y, have, want;
+
+    printf("Testing Sar\n");
+    for (int i = 0; i < NUM_TESTS; i++) {
+        GenSarTest((char*)x, (char*)y, (char*)want);
+        sar(have, x, y);
+        verbose_assert_eq(have, want, "Sar",
+                    "Random signed right shift should match Go implementation",
+                    false);
+    }
+}
+
 
 int main() {
     //////////////////////////// Arithmetic tests
@@ -641,6 +1002,38 @@ int main() {
     test_shl();
     test_shr();
     test_sar();
+
+    //////////////////////////// Random tests: Arithmetic
+    printf("Running %i random tests!\n", NUM_TESTS);
+    test_add_random();
+    test_mul_random();
+    test_sub_random();
+    test_div_random();
+    test_sdiv_random();
+    test_mod_random();
+    test_smod_random();
+    test_add_mod_random();
+    test_mul_mod_random();
+    test__exp_random();
+    test_sign_extend_random();
+
+    //////////////////////////// Random tests: Comparison
+    test_lt_random();
+    test_gt_random();
+    test_slt_random();
+    test_sgt_random();
+    test_eq_random();
+    test_is_zero_random();
+
+    //////////////////////////// Random tests: Bitwise
+    test_and_random();
+    test_or_random();
+    test_xor_random();
+    test_not_random();
+    test_byte_random();
+    test_shl_random();
+    test_shr_random();
+    test_sar_random();
 
     printf("All tests passed!\n");
 }
