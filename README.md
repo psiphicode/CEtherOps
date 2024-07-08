@@ -19,33 +19,29 @@ The end goal of this project is to have an importable library in C Stylus contra
 #include <CEtherOps/uint256.h>
 ```
 
-
 ## Testing
-The testing in this project is unconventional because I'm comparing the results of different implementations. The tests currently use randomly-generated integers. Passing tests only prove the correctness of subsets of all possible inputs and are not a guarantee of the safety of the code. The tests are currently lacking. The next iterations of testing will be more robust, probing for errors in edge cases. For example, in the `sar`, `shl`, etc. operations, the randomly generated integers will always be large enough to just set the result to zero. So I need to choose meaningful inputs to trigger different outcomes depending on the conditional branches of the operation.
+There are two tests to run for this project.
 
-#### C vs Go
-I compare the C implementation directly to the Golang implementation by capturing the std output when executing the test binaries. See [run.py](./test/run.py) for the code. To put it simply, in both C and Go, we perform the same operations using the same integers, then write their elements to std out. The test is valid if the std output of the C implementation matches that of the Golang implementation. There's a risk of the operations being identical but the output being different, for example, if the programs write the result to std output with even a single deviation. However, if the output matches exactly, then that should be evidence of a passing test. In other words, there could be a false negative test, but I don't think there could be a false positive test.
+#### C
+The C tests are broken into two parts:
+1. Statically determined [tests](./test/uint256.t.c) in C
+2. Randomly generated [tests](./test/randombytes.go) where the source of truth is the Golang uint256.go library compiled to be used in C
 
 Run the C/Go test:
 ```sh
-make testpy
+make testc
 ```
 
-#### EVM vs Stylus
-I had trouble setting up a local testing environment using foundry. It appears that when foundry does a fork of a contract, it locally caches the storage and bytecode of the contract, then tests run against the cached state and code. The only problem is that it uses the EVM to execute the forked bytecode, but Stylus contracts require the wasmer runtime. Therefore, the Solidity test contract is deployed on the Arbitrum Sepolia testnet. See [uint256.t.sol](./test/uint256.t.sol) for the code. I compare the way EVM handles big integers in Solidity to the Stylus contract.
-
+#### EVM
+The EVM tests are deployed to the Arbitrum Sepolia testnet. We randomly generate inputs using Javascript, then the source of truth of test results is the EVM operations we're implementing in Stylus C.
 
 To run the Solidity test, first install the npm dependencies:
 ```sh
 npm install .
 ```
-Then run the command:
+Then run the EVM test:
 ```sh
 make testsol
-```
-alternatively, run:
-```sh
-node test/uint256.t.js
 ```
 
 ## Build & Deploy
@@ -66,5 +62,3 @@ alternatively, run:
 ```sh
 bash scripts/deploy.sh
 ```
-
-Note that there's no real point to deploying this contract as it's still actively being developed and this was just a proof of concept.
