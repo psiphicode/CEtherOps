@@ -23,7 +23,7 @@ async function main() {
 
     const data = { address: contract.target };
     console.log(data);
-    fs.writeFileSync('./test_address.json', JSON.stringify(data));
+    fs.writeFileSync('./test/test_address.json', JSON.stringify(data));
 }
 
 main()
