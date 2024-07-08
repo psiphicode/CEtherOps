@@ -33,7 +33,7 @@ make testc
 ```
 
 #### EVM
-The EVM tests are deployed to the Arbitrum Sepolia testnet. We randomly generate inputs using Javascript, then the source of truth of test results is the EVM operations we're implementing in Stylus C.
+The EVM tests are deployed to the Arbitrum Sepolia testnet. We randomly generate inputs using Javascript, then call the test function, where the source of truth for test results is computed in the EVM itself. See [this file](./test/uint256.t.sol) to see how the Solidity tests compare the Stylus results to the EVM results.
 
 To run the Solidity test, first install the npm dependencies:
 ```sh
