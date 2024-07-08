@@ -37,22 +37,20 @@ build/%.o: src/%.c cargo-generate
 	mkdir -p build
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Generate the test cases files
-test/test_cases.go test/test_cases.c: scripts/gen_test_cases.py
-	python scripts/gen_test_cases.py 33
-
-# Run all of the tests
-testpy: test/run.py scripts/gen_test_cases.py test/uint256.t.c test/test_cases.go test/uint256.t.go
-	python scripts/gen_test_cases.py 33
-	gcc -I./include -Wall -g -o test/ct_uint256 test/uint256.t.c test/test_cases.c src/uint256.c test/helpers.c
-	python test/run.py
-
+# Run the Solidity test
 testsol: test/uint256.t.js
 	node test/uint256.t.js
 
-testc:
+# Compile the Go library
+test/librandombytes.h test/librandombytes.so: test/randombytes.go
 	go build -o test/librandombytes.so -buildmode=c-shared test/randombytes.go
-	gcc -I./include -Wall -g -o test/ct_uint256 test/uint256.tv2.c test/test_cases.c src/uint256.c test/helpers.c -L./test -lrandombytes
+
+# Compile the C test
+test/ct_uint256: test/uint256.t.c src/uint256.c test/helpers.c test/librandombytes.so test/librandombytes.h
+	gcc -I./include -Wall -g -o test/ct_uint256 test/uint256.t.c src/uint256.c test/helpers.c -L./test -lrandombytes
+
+# Run the C test
+testc: test/ct_uint256
 	@LD_LIBRARY_PATH="$(LD_LIBRARY_PATH):$(CURDIR)/test" ./test/ct_uint256
 
 # Step 4: link
@@ -64,6 +62,6 @@ build/uint256_stripped.wasm: build/uint256.wasm
 	wasm-strip -o $@ $<
 
 clean:
-	rm -rf interface-gen build test/test_cases.c test/test_cases.go
+	rm -rf interface-gen build test/ct_uint256 test/librandombytes.so test/librandombytes.h
 
-.phony: all cargo-generate clean testpy testsol
+.phony: all cargo-generate clean testc testsol
