@@ -84,6 +84,7 @@ async function main() {
     // restrict some of the y values to be less than 255 and 30, because some
     // tests are basically meaningless outside of this range. in particular,
     // shl, shr, sar, byte
+
     const first_sixth = NUM_TESTS/6;
     // first 1/6 of tests are 255 limit
     for (let i = 0; i < first_sixth; i++) {
@@ -96,14 +97,14 @@ async function main() {
 
     const test_result = await contract.test_values(values, tests_map);
 
-    const [passing, opcode, result1, result2, x, y, z] = test_result;
+    const [passing, opcode, have, want, x, y, z] = test_result;
     if (passing) {
         console.log('Test passed!');
     } else {
         console.log("Test failed. Here's the data:");
         console.log(`Opcode: ${opcodes[opcode]}`);
-        console.log(`result1: ${result1}`);
-        console.log(`result2: ${result2}`);
+        console.log(`have: ${have}`);
+        console.log(`want: ${want}`);
         console.log(`x: ${x}`);
         console.log(`y: ${y}`);
         console.log(`z: ${z}`);
