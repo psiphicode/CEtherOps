@@ -4,7 +4,7 @@ LD=wasm-ld
 CFLAGS=-I./include/ -Iinterface-gen/ --target=wasm32 -Os --no-standard-libraries -mbulk-memory -Wall -g
 LDFLAGS=-O2 --no-entry --stack-first -z stack-size=$(STACK_SIZE) -Bstatic
 
-OBJECTS=build/impl.o build/lib/bebi.o build/lib/helpers.o build/lib/uint256.o build/gen/Uint256_main.o
+OBJECTS=build/impl.o build/lib/bebi.o build/lib/wasm_revert.o build/lib/helpers.o build/lib/uint256.o build/gen/Uint256_main.o
 
 all: build/uint256_stripped.wasm
 
@@ -46,8 +46,8 @@ test/librandombytes.h test/librandombytes.so: test/randombytes.go
 	go build -o test/librandombytes.so -buildmode=c-shared test/randombytes.go
 
 # Compile the C test
-test/ct_uint256: test/uint256.t.c src/uint256.c test/helpers.c test/librandombytes.so test/librandombytes.h
-	gcc -I./include -Wall -g -o test/ct_uint256 test/uint256.t.c src/uint256.c test/helpers.c -L./test -lrandombytes
+test/ct_uint256: test/uint256.t.c src/uint256.c src/helpers.c test/librandombytes.so test/librandombytes.h
+	$(CC) -I./include -Wall -g -o test/ct_uint256 test/uint256.t.c src/uint256.c src/helpers.c src/c_revert.c -L./test -lrandombytes
 
 # Run the C test
 testc: test/ct_uint256
