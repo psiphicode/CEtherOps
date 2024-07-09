@@ -4,9 +4,7 @@
 /*
     Helper functions
 */
-void revert() {
-    asm("unreachable");
-}
+extern void revert();
 
 void clear_words(u64 *dest, int num_words) {
     __builtin_memset(dest, 0, num_words * sizeof(u64));

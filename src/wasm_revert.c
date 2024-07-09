@@ -1,0 +1,3 @@
+void revert() {
+    asm("unreachable");
+}
