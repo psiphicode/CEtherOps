@@ -58,18 +58,6 @@ void inline write1(u256 buf_out, u256 result) {
     }
 }
 
-void inline swap_endian(u256 buf_out) {
-    // swap from little endian <==> big endian or vice versa
-    u64 temp;
-    temp = __builtin_bswap64(buf_out[3]);
-    buf_out[3] = __builtin_bswap64(buf_out[0]);
-    buf_out[0] = temp;
-
-    temp = __builtin_bswap64(buf_out[2]);
-    buf_out[2] = __builtin_bswap64(buf_out[1]);
-    buf_out[1] = temp;
-}
-
 /*
     Arithmetic
 */
