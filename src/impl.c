@@ -73,7 +73,7 @@ ArbResult Add(uint8_t *input, size_t len) {
     read2(input, x, y);
 
     // perform operation
-    add(result, x, y);
+    u256_add(result, x, y);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -93,7 +93,7 @@ ArbResult Mul(uint8_t *input, size_t len) {
     read2(input, x, y);
 
     // perform operation
-    mul(result, x, y);
+    u256_mul(result, x, y);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -113,7 +113,7 @@ ArbResult Sub(uint8_t *input, size_t len) {
     read2(input, x, y);
 
     // perform operation
-    sub(result, x, y);
+    u256_sub(result, x, y);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -133,7 +133,7 @@ ArbResult Div(uint8_t *input, size_t len) {
     read2(input, x, y);
 
     // perform operation
-    div(result, x, y);
+    u256_div(result, x, y);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -153,7 +153,7 @@ ArbResult SDiv(uint8_t *input, size_t len) {
     read2(input, x, y);
 
     // perform operation
-    sdiv(result, x, y);
+    u256_sdiv(result, x, y);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -173,7 +173,7 @@ ArbResult Mod(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    mod(result, x, m);
+    u256_mod(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -193,7 +193,7 @@ ArbResult SMod(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    smod(result, x, m);
+    u256_smod(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -213,7 +213,7 @@ ArbResult AddMod(uint8_t *input, size_t len) {
     read3(input, x, y, m);
 
     // perform operation
-    add_mod(result, x, y, m);
+    u256_add_mod(result, x, y, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -233,7 +233,7 @@ ArbResult MulMod(uint8_t *input, size_t len) {
     read3(input, x, y, m);
 
     // perform operation
-    mul_mod(result, x, y, m);
+    u256_mul_mod(result, x, y, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -253,7 +253,7 @@ ArbResult Exp(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    _exp(result, x, m);
+    u256_exp(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -274,7 +274,7 @@ ArbResult SignExtend(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    sign_extend(result, x, m);
+    u256_sign_extend(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -297,7 +297,7 @@ ArbResult Lt(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    bool r = lt(x, m);
+    bool r = u256_lt(x, m);
     clear_words(&result[0], 4);
     result[0] = r;
 
@@ -319,7 +319,7 @@ ArbResult Gt(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    bool r = gt(x, m);
+    bool r = u256_gt(x, m);
     clear_words(&result[0], 4);
     result[0] = r;
 
@@ -341,7 +341,7 @@ ArbResult Slt(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    bool r = slt(x, m);
+    bool r = u256_slt(x, m);
     clear_words(&result[0], 4);
     result[0] = r;
 
@@ -363,7 +363,7 @@ ArbResult Sgt(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    bool r = sgt(x, m);
+    bool r = u256_sgt(x, m);
     clear_words(&result[0], 4);
     result[0] = r;
 
@@ -385,7 +385,7 @@ ArbResult Eq(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    bool r = eq(x, m);
+    bool r = u256_eq(x, m);
     clear_words(&result[0], 4);
     result[0] = r;
 
@@ -407,7 +407,7 @@ ArbResult IsZero(uint8_t *input, size_t len) {
     read1(input, x);
 
     // perform operation
-    bool r = is_zero(x);
+    bool r = u256_is_zero(x);
     clear_words(&result[0], 4);
     result[0] = r;
 
@@ -432,7 +432,7 @@ ArbResult And(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    and(result, x, m);
+    u256_and(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -452,7 +452,7 @@ ArbResult Or(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    or(result, x, m);
+    u256_or(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -472,7 +472,7 @@ ArbResult Xor(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    xor(result, x, m);
+    u256_xor(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -492,7 +492,7 @@ ArbResult Not(uint8_t *input, size_t len) {
     read1(input, x);
 
     // perform operation
-    not(result, x);
+    u256_not(result, x);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -512,7 +512,7 @@ ArbResult Byte(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    byte(result, x, m);
+    u256_byte(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -532,7 +532,7 @@ ArbResult Shl(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    shl(result, x, m);
+    u256_shl(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -552,7 +552,7 @@ ArbResult Shr(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    shr(result, x, m);
+    u256_shr(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);
@@ -572,7 +572,7 @@ ArbResult Sar(uint8_t *input, size_t len) {
     read2(input, x, m);
 
     // perform operation
-    sar(result, x, m);
+    u256_sar(result, x, m);
 
     // convert result to big endian
     write1(buf_out, result);

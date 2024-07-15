@@ -6,7 +6,7 @@
 /*
     arithmetic operations
 */
-void add(u256 res, u256 x, u256 y) {
+void u256_add(u256 res, u256 x, u256 y) {
     u64 carry;
     carry = add64(&res[0], x[0], y[0], 0);
     carry = add64(&res[1], x[1], y[1], carry);
@@ -14,7 +14,7 @@ void add(u256 res, u256 x, u256 y) {
             add64(&res[3], x[3], y[3], carry);
 }
 
-void mul(u256 res, u256 x, u256 y) {
+void u256_mul(u256 res, u256 x, u256 y) {
     u64 carry0, carry1, carry2;
     u64 res1, res2;
     u64 x0 = x[0];
@@ -38,7 +38,7 @@ void mul(u256 res, u256 x, u256 y) {
     res[3] = x3*y0 + x2*y1 + x0*y3 + x1*y2 + carry0 + carry1 + carry2;
 }
 
-void sub(u256 res, u256 x, u256 y) {
+void u256_sub(u256 res, u256 x, u256 y) {
     u64 carry;
     carry = sub64(&res[0], x[0], y[0], 0);
     carry = sub64(&res[1], x[1], y[1], carry);
@@ -46,13 +46,13 @@ void sub(u256 res, u256 x, u256 y) {
             sub64(&res[3], x[3], y[3], carry);
 }
 
-void neg(u256 res, u256 x) {
+void u256_neg(u256 res, u256 x) {
     u256 zero;
     clear_words(&zero[0], 4);
-    sub(res, zero, x);
+    u256_sub(res, zero, x);
 }
 
-void div(u256 res, u256 x, u256 y) {
+void u256_div(u256 res, u256 x, u256 y) {
     clear_words(&res[0], 4);
     if (_is_zero(y) || greater_than(y, x)) {
         return;
@@ -71,44 +71,44 @@ void div(u256 res, u256 x, u256 y) {
     udivrem(res, x, 4, y, _);
 }
 
-void sdiv(u256 res, u256 n, u256 d) {
+void u256_sdiv(u256 res, u256 n, u256 d) {
     int n_sign = sign(n);
     int d_sign = sign(d);
     if (n_sign > 0) {
         if (d_sign > 0) {
-            div(res, n, d);
+            u256_div(res, n, d);
             return;
         } else {
             u256 neg_d;
-            neg(neg_d, d);
+            u256_neg(neg_d, d);
 
-            div(res, n, neg_d);
-            neg(res, res);
+            u256_div(res, n, neg_d);
+            u256_neg(res, res);
             return;
         }
     }
 
     if (d_sign < 0) {
         u256 neg_n;
-        neg(neg_n, n);
+        u256_neg(neg_n, n);
 
         u256 neg_d;
-        neg(neg_d, d);
+        u256_neg(neg_d, d);
 
-        div(res, neg_n, neg_d);
+        u256_div(res, neg_n, neg_d);
         return;
     }
 
     u256 neg_n;
-    neg(neg_n, n);
+    u256_neg(neg_n, n);
 
-    div(res, neg_n, d);
-    neg(res, res);
+    u256_div(res, neg_n, d);
+    u256_neg(res, res);
 }
 
-void mod(u256 res, u256 x, u256 y) {
+void u256_mod(u256 res, u256 x, u256 y) {
     clear_words(&res[0], 4);
-    if (is_zero(y) || eq(x, y)) {
+    if (_is_zero(y) || _eq(x, y)) {
         return;
     }
 
@@ -126,7 +126,7 @@ void mod(u256 res, u256 x, u256 y) {
     udivrem(_, x, 4, y, res);
 }
 
-void smod(u256 res, u256 x, u256 m) {
+void u256_smod(u256 res, u256 x, u256 m) {
     int m_sign = sign(m);
     int x_sign = sign(x);
 
@@ -136,18 +136,18 @@ void smod(u256 res, u256 x, u256 m) {
     copy_words(&tmp_m[0], &m[0], 4);
 
     if (x_sign == -1) {
-        neg(tmp_x, tmp_x);
+        u256_neg(tmp_x, tmp_x);
     }
     if (m_sign == -1) {
-        neg(tmp_m, tmp_m);
+        u256_neg(tmp_m, tmp_m);
     }
-    mod(res, tmp_x, tmp_m);
+    u256_mod(res, tmp_x, tmp_m);
     if (x_sign == -1) {
-        neg(res, res);
+        u256_neg(res, res);
     }
 }
 
-void add_mod(u256 res, u256 x, u256 y, u256 m) {
+void u256_add_mod(u256 res, u256 x, u256 y, u256 m) {
     if ((m[3] != 0) && (x[3] <= m[3]) && (y[3] <= m[3])) {
         u64 gte_c1 = 0;
         u64 gte_c2 = 0;
@@ -195,7 +195,7 @@ void add_mod(u256 res, u256 x, u256 y, u256 m) {
         return;
     }
 
-    if (is_zero(m)) {
+    if (_is_zero(m)) {
         clear_words(&res[0], 4);
         return;
     }
@@ -209,11 +209,11 @@ void add_mod(u256 res, u256 x, u256 y, u256 m) {
         udivrem(quot, sum, 5, m, res);
         return;
     }
-    mod(res, sum, m);
+    u256_mod(res, sum, m);
 }
 
-void mul_mod(u256 res, u256 x, u256 y, u256 m) {
-    if (is_zero(x) || is_zero(y) || is_zero(m)) {
+void u256_mul_mod(u256 res, u256 x, u256 y, u256 m) {
+    if (_is_zero(x) || _is_zero(y) || _is_zero(m)) {
         clear_words(&res[0], 4);
         return;
     }
@@ -231,8 +231,8 @@ void mul_mod(u256 res, u256 x, u256 y, u256 m) {
     copy_words(&pl[0], &p[0], 4);
     copy_words(&ph[0], &p[4], 4);
 
-    if (is_zero(ph)) {
-        mod(res, pl, m);
+    if (_is_zero(ph)) {
+        u256_mod(res, pl, m);
         return;
     }
 
@@ -240,7 +240,7 @@ void mul_mod(u256 res, u256 x, u256 y, u256 m) {
     udivrem(_, p, 8, m, res);
 }
 
-void _exp(u256 res, u256 base, u256 exponent) {
+void u256_exp(u256 res, u256 base, u256 exponent) {
     clear_words(&res[0], 4);
     res[0] = 1;
     u256 multiplier;
@@ -251,7 +251,7 @@ void _exp(u256 res, u256 base, u256 exponent) {
     u64 word = exponent[0];
     for (;cur_bit < exp_bit_len && cur_bit < 64; cur_bit++) {
         if ((word&1) == 1) {
-            mul(res, res, multiplier);
+            u256_mul(res, res, multiplier);
         }
         squared(multiplier);
         word >>= 1;
@@ -260,7 +260,7 @@ void _exp(u256 res, u256 base, u256 exponent) {
     word = exponent[1];
     for (;cur_bit < exp_bit_len && cur_bit < 128; cur_bit++) {
         if ((word&1) == 1) {
-            mul(res, res, multiplier);
+            u256_mul(res, res, multiplier);
         }
         squared(multiplier);
         word >>= 1;
@@ -269,7 +269,7 @@ void _exp(u256 res, u256 base, u256 exponent) {
     word = exponent[2];
     for (;cur_bit < exp_bit_len && cur_bit < 192; cur_bit++) {
         if ((word&1) == 1) {
-            mul(res, res, multiplier);
+            u256_mul(res, res, multiplier);
         }
         squared(multiplier);
         word >>= 1;
@@ -278,14 +278,14 @@ void _exp(u256 res, u256 base, u256 exponent) {
     word = exponent[3];
     for (;cur_bit < exp_bit_len && cur_bit < 256; cur_bit++) {
         if ((word&1) == 1) {
-            mul(res, res, multiplier);
+            u256_mul(res, res, multiplier);
         }
         squared(multiplier);
         word >>= 1;
     }
 }
 
-void sign_extend(u256 res, u256 x, u256 b) {
+void u256_sign_extend(u256 res, u256 x, u256 b) {
     copy_words(&res[0], &x[0], 4);
     if (greater_than_uint64(b, 30)) {
         return;
@@ -330,15 +330,15 @@ void sign_extend(u256 res, u256 x, u256 b) {
 /*
     comparison operations
 */
-bool lt(u256 x, u256 y) {
+bool u256_lt(u256 x, u256 y) {
     return less_than(x, y);
 }
 
-bool gt(u256 x, u256 y) {
+bool u256_gt(u256 x, u256 y) {
     return greater_than(x, y);
 }
 
-bool slt(u256 x, u256 y) {
+bool u256_slt(u256 x, u256 y) {
     int x_sign = sign(x);
     int y_sign = sign(y);
 
@@ -351,7 +351,7 @@ bool slt(u256 x, u256 y) {
     return less_than(x, y);
 }
 
-bool sgt(u256 x, u256 y) {
+bool u256_sgt(u256 x, u256 y) {
     int x_sign = sign(x);
     int y_sign = sign(y);
 
@@ -364,46 +364,46 @@ bool sgt(u256 x, u256 y) {
     return greater_than(x, y);
 }
 
-bool eq(u256 x, u256 y) {
+bool u256_eq(u256 x, u256 y) {
     return _eq(x, y);
 }
 
-bool is_zero(u256 x) {
+bool u256_is_zero(u256 x) {
     return _is_zero(x);
 }
 
 /*
     bitwise operations
 */
-void and(u256 res, u256 x, u256 y) {
+void u256_and(u256 res, u256 x, u256 y) {
     res[0] = x[0] & y[0];
     res[1] = x[1] & y[1];
     res[2] = x[2] & y[2];
     res[3] = x[3] & y[3];
 }
 
-void or(u256 res, u256 x, u256 y) {
+void u256_or(u256 res, u256 x, u256 y) {
     res[0] = x[0] | y[0];
     res[1] = x[1] | y[1];
     res[2] = x[2] | y[2];
     res[3] = x[3] | y[3];
 }
 
-void xor(u256 res, u256 x, u256 y) {
+void u256_xor(u256 res, u256 x, u256 y) {
     res[0] = x[0] ^ y[0];
     res[1] = x[1] ^ y[1];
     res[2] = x[2] ^ y[2];
     res[3] = x[3] ^ y[3];
 }
 
-void not(u256 res, u256 x) {
+void u256_not(u256 res, u256 x) {
     res[0] = ~x[0];
     res[1] = ~x[1];
     res[2] = ~x[2];
     res[3] = ~x[3];
 }
 
-void byte(u256 res, u256 x, u256 i) {
+void u256_byte(u256 res, u256 x, u256 i) {
     clear_words(&res[0], 4);
     u64 index = i[0];
     if (index >= 32 || ((i[1] | i[2] | i[3]) != 0)) {
@@ -414,7 +414,7 @@ void byte(u256 res, u256 x, u256 i) {
     res[0] = shift > 0 ? (number >> shift) & 0xff : number & 0xff;
 }
 
-void shl(u256 res, u256 x, u256 shift) {
+void u256_shl(u256 res, u256 x, u256 shift) {
     if (less_than_uint64(shift, 256)) {
         lsh(res, x, shift[0]);
         return;
@@ -422,7 +422,7 @@ void shl(u256 res, u256 x, u256 shift) {
     clear_words(&res[0], 4);
 }
 
-void shr(u256 res, u256 x, u256 shift) {
+void u256_shr(u256 res, u256 x, u256 shift) {
     if (less_than_uint64(shift, 256)) {
         rsh(res, x, shift[0]);
         return;
@@ -430,7 +430,7 @@ void shr(u256 res, u256 x, u256 shift) {
     clear_words(&res[0], 4);
 }
 
-void sar(u256 res, u256 value, u256 shift) {
+void u256_sar(u256 res, u256 value, u256 shift) {
     if (greater_than_uint64(shift, 256)) {
         if (sign(value) >= 0) {
             clear_words(&res[0], 4);

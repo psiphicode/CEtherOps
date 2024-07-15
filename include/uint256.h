@@ -7,32 +7,32 @@
 */
 
 // arithmetic
-void add(u256 res, u256 x, u256 y);
-void mul(u256 res, u256 x, u256 y);
-void sub(u256 res, u256 x, u256 y);
-void div(u256 res, u256 x, u256 y);
-void sdiv(u256 res, u256 x, u256 y);
-void mod(u256 res, u256 x, u256 m);
-void smod(u256 res, u256 x, u256 m);
-void add_mod(u256 res, u256 x, u256 y, u256 m);
-void mul_mod(u256 res, u256 x, u256 y, u256 m);
-void _exp(u256 res, u256 x, u256 exponent);
-void sign_extend(u256 res, u256 b, u256 x);
+void u256_add(u256 res, u256 x, u256 y);
+void u256_mul(u256 res, u256 x, u256 y);
+void u256_sub(u256 res, u256 x, u256 y);
+void u256_div(u256 res, u256 x, u256 y);
+void u256_sdiv(u256 res, u256 x, u256 y);
+void u256_mod(u256 res, u256 x, u256 m);
+void u256_smod(u256 res, u256 x, u256 m);
+void u256_add_mod(u256 res, u256 x, u256 y, u256 m);
+void u256_mul_mod(u256 res, u256 x, u256 y, u256 m);
+void u256_exp(u256 res, u256 x, u256 exponent);
+void u256_sign_extend(u256 res, u256 b, u256 x);
 
 // comparison
-bool lt(u256 x, u256 y);
-bool gt(u256 x, u256 y);
-bool slt(u256 x, u256 y);
-bool sgt(u256 x, u256 y);
-bool eq(u256 x, u256 y);
-bool is_zero(u256 x);
+bool u256_lt(u256 x, u256 y);
+bool u256_gt(u256 x, u256 y);
+bool u256_slt(u256 x, u256 y);
+bool u256_sgt(u256 x, u256 y);
+bool u256_eq(u256 x, u256 y);
+bool u256_is_zero(u256 x);
 
 // bitwise
-void and(u256 res, u256 x, u256 y);
-void or(u256 res, u256 x, u256 y);
-void xor(u256 res, u256 x, u256 y);
-void not(u256 res, u256 x);
-void byte(u256 res, u256 x, u256 i);
-void shl(u256 res, u256 x, u256 shift);
-void shr(u256 res, u256 x, u256 shift);
-void sar(u256 res, u256 x, u256 shift);
+void u256_and(u256 res, u256 x, u256 y);
+void u256_or(u256 res, u256 x, u256 y);
+void u256_xor(u256 res, u256 x, u256 y);
+void u256_not(u256 res, u256 x);
+void u256_byte(u256 res, u256 x, u256 i);
+void u256_shl(u256 res, u256 x, u256 shift);
+void u256_shr(u256 res, u256 x, u256 shift);
+void u256_sar(u256 res, u256 x, u256 shift);
