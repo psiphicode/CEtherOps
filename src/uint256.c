@@ -305,7 +305,7 @@ void u256_sign_extend(u256 res, u256 x, u256 b) {
         sign_mask = 0;
     } else {
         sext = sext_byte << sign_byte_offset;
-        sign_mask = 0xffffffffffffffffULL << sign_byte_offset;
+        sign_mask = MAX_U64 << sign_byte_offset;
     }
     u64 value = sign_word & ~sign_mask;
 

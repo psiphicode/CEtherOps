@@ -4,7 +4,7 @@ LD=wasm-ld
 CFLAGS=-I./include/ -Iinterface-gen/ --target=wasm32 -Os --no-standard-libraries -mbulk-memory -Wall -g
 LDFLAGS=-O2 --no-entry --stack-first -z stack-size=$(STACK_SIZE) -Bstatic
 
-OBJECTS=build/impl.o build/lib/bebi.o build/lib/revert_wasm.o build/lib/helpers.o build/lib/uint256.o build/gen/Uint256_main.o
+OBJECTS=build/impl.o build/lib/bebi.o build/lib/revert_wasm.o build/lib/uint256_core.o build/lib/uint256.o build/gen/Uint256_main.o
 
 all: build/uint256_stripped.wasm
 
@@ -42,12 +42,12 @@ testsol: test/uint256.t.js
 	node test/uint256.t.js
 
 # Compile the Go library
-test/librandombytes.h test/librandombytes.so: test/randombytes.go
-	go build -o test/librandombytes.so -buildmode=c-shared test/randombytes.go
+test/libuint256testgen.h test/libuint256testgen.so: test/uint256testgen.go
+	go build -o test/libuint256testgen.so -buildmode=c-shared test/uint256testgen.go
 
 # Compile the C test
-test/ct_uint256: test/uint256.t.c src/uint256.c src/helpers.c test/librandombytes.so test/librandombytes.h
-	$(CC) -I./include -Wall -g -o test/ct_uint256 test/uint256.t.c src/uint256.c src/helpers.c src/revert.c -L./test -lrandombytes
+test/ct_uint256: test/uint256.t.c src/uint256.c src/uint256_core.c test/libuint256testgen.so test/libuint256testgen.h
+	$(CC) -I./include -Wall -g -o test/ct_uint256 test/uint256.t.c src/uint256.c src/uint256_core.c src/revert.c -L./test -luint256testgen
 
 # Run the C test
 testc: test/ct_uint256
@@ -62,6 +62,6 @@ build/uint256_stripped.wasm: build/uint256.wasm
 	wasm-strip -o $@ $<
 
 clean:
-	rm -rf interface-gen build test/ct_uint256 test/librandombytes.so test/librandombytes.h
+	rm -rf interface-gen build test/ct_uint256 test/libuint256testgen.so test/libuint256testgen.h
 
 .phony: all cargo-generate clean testc testsol

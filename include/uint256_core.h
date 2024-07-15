@@ -9,6 +9,8 @@ typedef uint64_t u256[4];
 typedef uint64_t u320[5];
 typedef uint64_t u512[8];
 
+#define MAX_U64 0xffffffffffffffffULL
+
 void clear_words(u64 *dest, int num_words);
 void copy_words(u64 *dest, u64 *src, int num_words);
 

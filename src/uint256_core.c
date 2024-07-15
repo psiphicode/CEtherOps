@@ -1,5 +1,7 @@
-#include <stdbool.h>
-#include <helpers.h>
+/*
+* Core logic for u256 library
+* */
+#include <uint256_core.h>
 
 /*
     Helper functions

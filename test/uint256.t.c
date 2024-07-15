@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <assert.h>
 #include <uint256.h>
-#include "librandombytes.h"
+#include "libuint256testgen.h"
 
-#define MAX_U64 0xffffffffffffffffULL
+
 #define NUM_TESTS 10000
 
 
@@ -14,10 +14,6 @@
 void print_uint(const char *label, u256 x) {
     printf("%s[0]: %lu\n%s[1]: %lu\n%s[2]: %lu\n%s[3]: %lu\n",
            label, x[0], label, x[1], label, x[2], label, x[3]);
-}
-
-void go_gen_add_test(u256 x, u256 y, u256 res) {
-    GenAddTest((char*)x, (char*)y, (char*)res);
 }
 
 // Compare each word of two 256 bit integers
@@ -81,7 +77,7 @@ void test_add() {
     u256 want = {0, 1, 0, 0};
 
     u256 have;
-    add(have, x, y);
+    u256_add(have, x, y);
 
     verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly",
                       true);
@@ -89,7 +85,7 @@ void test_add() {
     x[1] = MAX_U64;
     want[1] = 0;
     want[2] = 1;
-    add(have, x, y);
+    u256_add(have, x, y);
 
     verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly",
                       true);
@@ -97,14 +93,14 @@ void test_add() {
     x[2] = MAX_U64;
     want[2] = 0;
     want[3] = 1;
-    add(have, x, y);
+    u256_add(have, x, y);
 
     verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly",
                       true);
 
     x[3] = MAX_U64;
     want[3] = 0;
-    add(have, x, y);
+    u256_add(have, x, y);
 
     verbose_assert_eq(have, want, "Add", "Should overflow/wrap correctly",
                       true);
@@ -116,7 +112,7 @@ void test_mul() {
     u256 want = {4, 0, 0, 0};
 
     u256 have;
-    add(have, x, y);
+    u256_add(have, x, y);
 
     verbose_assert_eq(have, want, "Mul", "Product should be correct",
                       true);
@@ -128,7 +124,7 @@ void test_sub() {
     u256 want = {2, 0, 0, 0};
 
     u256 have;
-    sub(have, x, y);
+    u256_sub(have, x, y);
 
     verbose_assert_eq(have, want, "Sub", "Difference should be correct",
                       true);
@@ -140,19 +136,19 @@ void test_div() {
     u256 want = {2, 0, 0, 0};
 
     u256 have;
-    div(have, x, y);
+    u256_div(have, x, y);
 
     verbose_assert_eq(have, want, "Div", "Division should be correct", true);
 
     y[0] = 4;
     want[0] = 1;
-    div(have, x, y);
+    u256_div(have, x, y);
     verbose_assert_eq(have, want, "Div", "A number divided by itself is one",
                       true);
 
     y[0] = 0;
     want[0] = 0;
-    div(have, x, y);
+    u256_div(have, x, y);
     verbose_assert_eq(have, want, "Div", "Division by zero is zero",
                       true);
 }
@@ -163,7 +159,7 @@ void test_sdiv() {
     u256 want = {5, 0, 0, 0};
 
     u256 have;
-    sdiv(have, x, y);
+    u256_sdiv(have, x, y);
 
     verbose_assert_eq(have, want, "SDiv", "Should succeed", true);
 }
@@ -174,7 +170,7 @@ void test_mod() {
     u256 want = {7%2, 0, 0, 0};
 
     u256 have;
-    mod(have, x, m);
+    u256_mod(have, x, m);
 
     verbose_assert_eq(have, want, "Mod", "Should succeed", true);
 }
@@ -185,7 +181,7 @@ void test_smod() {
     u256 want = {7%2, 0, 0, 0};
 
     u256 have;
-    smod(have, x, m);
+    u256_smod(have, x, m);
 
     verbose_assert_eq(have, want, "SMod",
                       "Should succeed with negative m", true);
@@ -199,7 +195,7 @@ void test_smod() {
     want[2] = MAX_U64;
     want[3] = MAX_U64;
 
-    smod(have, x, m);
+    u256_smod(have, x, m);
 
     verbose_assert_eq(have, want, "SMod",
                       "Should preserve negative sign of x", true);
@@ -212,7 +208,7 @@ void test_add_mod() {
     u256 want = {17%5, 0, 0, 0};
 
     u256 have;
-    add_mod(have, x, y, m);
+    u256_add_mod(have, x, y, m);
 
     verbose_assert_eq(have, want, "AddMod", "Should succeed", true);
 }
@@ -224,18 +220,18 @@ void test_mul_mod() {
     u256 want = {70%5, 0, 0, 0};
 
     u256 have;
-    mul_mod(have, x, y, m);
+    u256_mul_mod(have, x, y, m);
 
     verbose_assert_eq(have, want, "MulMod", "Should succeed", true);
 }
 
-void test__exp() {
+void test_exp() {
     u256 x = {7, 0, 0, 0};
     u256 y = {3, 0, 0, 0};
     u256 want = {343, 0, 0, 0};
 
     u256 have;
-    _exp(have, x, y);
+    u256_exp(have, x, y);
 
     verbose_assert_eq(have, want, "Exp", "Should succeed", true);
 }
@@ -256,7 +252,7 @@ void test_sign_extend() {
     };
 
     u256 have;
-    sign_extend(have, x, y);
+    u256_sign_extend(have, x, y);
 
     verbose_assert_eq(have, want, "SignExtend",
                       "Should extend the sign of a negative uint64", true);
@@ -271,7 +267,7 @@ void test_sign_extend() {
     want[2] = 0b0000000000000000000000000000000000000000000000000000000000000000;
     want[3] = 0b0000000000000000000000000000000000000000000000000000000000000000;
 
-    sign_extend(have, x, y);
+    u256_sign_extend(have, x, y);
 
     verbose_assert_eq(have, want, "SignExtend",
                       "Should preserve the sign of a positive uint64", true);
@@ -286,7 +282,7 @@ void test_sign_extend() {
     want[2] = 0b1111111111111111111111111111111111111111111111111111111111111111;
     want[3] = 0b1111111111111111111111111111111111111111111111111111111111111111;
 
-    sign_extend(have, x, y);
+    u256_sign_extend(have, x, y);
 
     verbose_assert_eq(have, want, "SignExtend",
                       "Should extend the sign of a negative uint8", true);
@@ -301,7 +297,7 @@ void test_sign_extend() {
     want[2] = 0b1000000000000000000000000000000000000000000000000000000000000000;
     want[3] = 0b1111111111111111111111111111111111111111111111111111111111111111;
 
-    sign_extend(have, x, y);
+    u256_sign_extend(have, x, y);
 
     verbose_assert_eq(have, want, "SignExtend",
                       "Should extend the sign of a negative uint192", true);
@@ -317,19 +313,19 @@ void test_lt() {
     u256 y = {1, 0, 0, 0};
     bool want = false;
 
-    bool have = lt(x, y);
+    bool have = u256_lt(x, y);
 
     verbose_assert_bool(have, want, "Lt", "Should be false when equal", true);
 
     x[0] = 10;
-    have = lt(x, y);
+    have = u256_lt(x, y);
 
     verbose_assert_bool(have, want, "Lt", "Should be false when greater than",
                         true);
 
     x[0] = 0;
     want = true;
-    have = lt(x, y);
+    have = u256_lt(x, y);
 
     verbose_assert_bool(have, want, "Lt", "Should be true when less than",
                         true);
@@ -341,19 +337,19 @@ void test_gt() {
     u256 y = {1, 0, 0, 0};
     bool want = false;
 
-    bool have = gt(x, y);
+    bool have = u256_gt(x, y);
 
     verbose_assert_bool(have, want, "Gt", "Should be false when equal", true);
 
     x[0] = 0;
-    have = gt(x, y);
+    have = u256_gt(x, y);
 
     verbose_assert_bool(have, want, "Gt", "Should be false when less than",
                         true);
 
     x[0] = 2;
     want = true;
-    have = gt(x, y);
+    have = u256_gt(x, y);
 
     verbose_assert_bool(have, want, "Gt", "Should be true when greater than",
                         true);
@@ -364,13 +360,13 @@ void test_slt() {
     u256 y = {1, 0, 0, 0};                         // y = 1
     bool want = true;
 
-    bool have = slt(x, y);
+    bool have = u256_slt(x, y);
 
     verbose_assert_bool(have, want, "Slt",
         "Negative number should be less than a positive number", true);
 
     y[0] = 0;                                      // y = 0
-    have = slt(x, y);
+    have = u256_slt(x, y);
 
     verbose_assert_bool(have, want, "Slt",
         "Negative number should be less than zero", true);
@@ -378,7 +374,7 @@ void test_slt() {
     copy_words(&y[0], &x[0], 4);                   // y = -1
     x[0] -=1;                                      // x = -2
 
-    have = slt(x, y);
+    have = u256_slt(x, y);
     verbose_assert_bool(have, want, "Slt",
         "More negative number should be less than less negative number", true);
 }
@@ -388,13 +384,13 @@ void test_sgt() {
     u256 y = {MAX_U64, MAX_U64, MAX_U64, MAX_U64}; // y = -1
     bool want = true;
 
-    bool have = sgt(x, y);
+    bool have = u256_sgt(x, y);
 
     verbose_assert_bool(have, want, "Sgt",
         "Positive number should be greater than a negative number", true);
 
     clear_words(&y[0], 4);                         // y = 0
-    have = sgt(x, y);
+    have = u256_sgt(x, y);
 
     verbose_assert_bool(have, want, "Sgt",
         "Positive number should be greater than zero", true);
@@ -402,7 +398,7 @@ void test_sgt() {
     copy_words(&y[0], &x[0], 4);                   // y = 1
     x[0] +=1;                                      // x = 2
 
-    have = sgt(x, y);
+    have = u256_sgt(x, y);
     verbose_assert_bool(have, want, "Sgt",
         "More positive number should be greater than less positive number",
         true);
@@ -413,13 +409,13 @@ void test_eq() {
     u256 y = {1, 0, 0, 0};
     bool want = true;
 
-    bool have = eq(x, y);
+    bool have = u256_eq(x, y);
 
     verbose_assert_bool(have, want, "Eq", "Should be true when equal", true);
 
     x[0] = 0;
     want = false;
-    have = eq(x, y);
+    have = u256_eq(x, y);
 
     verbose_assert_bool(have, want, "Eq", "Should be false when not equal",
                         true);
@@ -429,14 +425,14 @@ void test_is_zero() {
     u256 x = {1, 0, 0, 0};
     bool want = false;
 
-    bool have = is_zero(x);
+    bool have = u256_is_zero(x);
 
     verbose_assert_bool(have, want, "IsZero", "Should be false when nonzero",
                         true);
 
     x[0] = 0;
     want = true;
-    have = is_zero(x);
+    have = u256_is_zero(x);
 
     verbose_assert_bool(have, want, "IsZero", "Should be true when zero", true);
 }
@@ -469,7 +465,7 @@ void test_and() {
     };
 
     u256 have;
-    and(have, x, y);
+    u256_and(have, x, y);
 
     verbose_assert_eq(have, want, "And", "Should succeed", true);
 }
@@ -495,7 +491,7 @@ void test_or() {
     };
 
     u256 have;
-    or(have, x, y);
+    u256_or(have, x, y);
 
     verbose_assert_eq(have, want, "Or", "Should succeed", true);
 }
@@ -521,7 +517,7 @@ void test_xor() {
     };
 
     u256 have;
-    xor(have, x, y);
+    u256_xor(have, x, y);
 
     verbose_assert_eq(have, want, "Xor", "Should succeed", true);
 }
@@ -541,7 +537,7 @@ void test_not() {
     };
 
     u256 have;
-    not(have, x);
+    u256_not(have, x);
 
     verbose_assert_eq(have, want, "Not", "Should succeed", true);
 }
@@ -587,7 +583,7 @@ void test_byte() {
                 x[word] <<= 8;
             }
             i[0] -= 1;
-            byte(have, x, i);
+            u256_byte(have, x, i);
             sprintf(msg, "Should retrieve byte %lu", i[0]);
             verbose_assert_eq(have, want, "Byte", msg, false);
         }
@@ -611,13 +607,13 @@ void test_shl() {
     };
 
     u256 have;
-    shl(have, x, shift);
+    u256_shl(have, x, shift);
 
     verbose_assert_eq(have, want, "Shl", "Should left shift by 3 bits", true);
 
     shift[0] = 256;
     clear_words(&want[0], 4);
-    shl(have, x, shift);
+    u256_shl(have, x, shift);
 
     verbose_assert_eq(have, want, "Shl", "Maximum left shift should return 0",
                       true);
@@ -640,13 +636,13 @@ void test_shr() {
     };
 
     u256 have;
-    shr(have, x, shift);
+    u256_shr(have, x, shift);
 
     verbose_assert_eq(have, want, "Shr", "Should right shift by 3 bits", true);
 
     shift[0] = 256;
     clear_words(&want[0], 4);
-    shr(have, x, shift);
+    u256_shr(have, x, shift);
 
     verbose_assert_eq(have, want, "Shr", "Maximum right shift should return 0",
                       true);
@@ -668,7 +664,7 @@ void test_sar() {
     };
 
     u256 have;
-    sar(have, x, shift);
+    u256_sar(have, x, shift);
 
     verbose_assert_eq(have, want, "Sar",
         "Shift right for negative value should fill left with 1s", true);
@@ -677,21 +673,21 @@ void test_sar() {
     want[3] =
         0b0000110001111111111111111111111111111111111111111111111111111000;
 
-    sar(have, x, shift);
+    u256_sar(have, x, shift);
 
     verbose_assert_eq(have, want, "Sar",
         "Shift right for positive value should fill left with 0s", true);
 
     shift[0] = 256;
     clear_words(&want[0], 4);
-    sar(have, x, shift);
+    u256_sar(have, x, shift);
 
     verbose_assert_eq(have, want, "Sar",
         "Maximum shift right for positive value should return all 0s", true);
 
     x[3] = 0b1000000000000000000000000000000000000000000000000000000000000000;
     want[0] = MAX_U64; want[1] = MAX_U64; want[2] = MAX_U64; want[3] = MAX_U64;
-    sar(have, x, shift);
+    u256_sar(have, x, shift);
 
     verbose_assert_eq(have, want, "Sar",
         "Maximum shift right for negative value should return all 1s", true);
@@ -706,7 +702,7 @@ void test_add_random() {
     printf("Testing Add\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenAddTest((char*)x, (char*)y, (char*)want);
-        add(have, x, y);
+        u256_add(have, x, y);
         verbose_assert_eq(have, want, "Add",
                           "Random addition should match Go implementation",
                           false);
@@ -719,7 +715,7 @@ void test_mul_random() {
     printf("Testing Mul\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenMulTest((char*)x, (char*)y, (char*)want);
-        mul(have, x, y);
+        u256_mul(have, x, y);
         verbose_assert_eq(have, want, "Mul",
                           "Random multiply should match Go implementation",
                           false);
@@ -732,7 +728,7 @@ void test_sub_random() {
     printf("Testing Sub\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenSubTest((char*)x, (char*)y, (char*)want);
-        sub(have, x, y);
+        u256_sub(have, x, y);
         verbose_assert_eq(have, want, "Sub",
                           "Random subtraction should match Go implementation",
                           false);
@@ -745,7 +741,7 @@ void test_div_random() {
     printf("Testing Div\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenDivTest((char*)x, (char*)y, (char*)want);
-        div(have, x, y);
+        u256_div(have, x, y);
         verbose_assert_eq(have, want, "Div",
                           "Random divide should match Go implementation",
                           false);
@@ -758,7 +754,7 @@ void test_sdiv_random() {
     printf("Testing SDiv\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenSDivTest((char*)x, (char*)y, (char*)want);
-        sdiv(have, x, y);
+        u256_sdiv(have, x, y);
         verbose_assert_eq(have, want, "SDiv",
                           "Random signed divide should match Go implementation",
                           false);
@@ -771,7 +767,7 @@ void test_mod_random() {
     printf("Testing Mod\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenModTest((char*)x, (char*)y, (char*)want);
-        mod(have, x, y);
+        u256_mod(have, x, y);
         verbose_assert_eq(have, want, "Mod",
                           "Random modulus should match Go implementation",
                           false);
@@ -784,7 +780,7 @@ void test_smod_random() {
     printf("Testing SMod\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenSModTest((char*)x, (char*)y, (char*)want);
-        smod(have, x, y);
+        u256_smod(have, x, y);
         verbose_assert_eq(have, want, "SMod",
                         "Random signed modulus should match Go implementation",
                         false);
@@ -797,9 +793,9 @@ void test_add_mod_random() {
     printf("Testing AddMod\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenAddModTest((char*)x, (char*)y, (char*)m, (char*)want);
-        add_mod(have, x, y, m);
+        u256_add_mod(have, x, y, m);
         verbose_assert_eq(have, want, "AddMod",
-                        "Random add mod should match Go implementation",
+                        "Random u256_add u256_mod should match Go implementation",
                         false);
     }
 }
@@ -810,20 +806,20 @@ void test_mul_mod_random() {
     printf("Testing MulMod\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenMulModTest((char*)x, (char*)y, (char*)m, (char*)want);
-        mul_mod(have, x, y, m);
+        u256_mul_mod(have, x, y, m);
         verbose_assert_eq(have, want, "MulMod",
-                        "Random mul mod should match Go implementation",
+                        "Random mul u256_mod should match Go implementation",
                         false);
     }
 }
 
-void test__exp_random() {
+void test_exp_random() {
     u256 x, y, have, want;
 
     printf("Testing Exp\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenExpTest((char*)x, (char*)y, (char*)want);
-        _exp(have, x, y);
+        u256_exp(have, x, y);
         verbose_assert_eq(have, want, "Exp",
                         "Random exponentiation should match Go implementation",
                         false);
@@ -836,7 +832,7 @@ void test_sign_extend_random() {
     printf("Testing SignExtend\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenSignExtendTest((char*)x, (char*)y, (char*)want);
-        sign_extend(have, x, y);
+        u256_sign_extend(have, x, y);
         verbose_assert_eq(have, want, "SignExtend",
                         "Random sign extension should match Go implementation",
                         false);
@@ -857,7 +853,7 @@ void test_lt_random() {
         GenLtTest((char*)x, (char*)y, result);
 
         bool want = r == 1 ? true : false;
-        bool have = lt(x, y);
+        bool have = u256_lt(x, y);
         verbose_assert_bool(have, want, "Lt",
                         "Random less than should match Go implementation",
                         false);
@@ -875,7 +871,7 @@ void test_gt_random() {
         GenGtTest((char*)x, (char*)y, result);
 
         bool want = r == 1 ? true : false;
-        bool have = gt(x, y);
+        bool have = u256_gt(x, y);
         verbose_assert_bool(have, want, "Gt",
                         "Random greater than should match Go implementation",
                         false);
@@ -893,7 +889,7 @@ void test_slt_random() {
         GenSltTest((char*)x, (char*)y, result);
 
         bool want = r == 1 ? true : false;
-        bool have = slt(x, y);
+        bool have = u256_slt(x, y);
         verbose_assert_bool(have, want, "Slt",
                     "Random signed less than should match Go implementation",
                     false);
@@ -911,7 +907,7 @@ void test_sgt_random() {
         GenSgtTest((char*)x, (char*)y, result);
 
         bool want = r == 1 ? true : false;
-        bool have = sgt(x, y);
+        bool have = u256_sgt(x, y);
         verbose_assert_bool(have, want, "Sgt",
                     "Random signed greater than should match Go implementation",
                     false);
@@ -929,7 +925,7 @@ void test_eq_random() {
         GenEqTest((char*)x, (char*)y, result);
 
         bool want = r == 1 ? true : false;
-        bool have = eq(x, y);
+        bool have = u256_eq(x, y);
         verbose_assert_bool(have, want, "Eq",
                             "Random equals should match Go implementation",
                             false);
@@ -947,7 +943,7 @@ void test_is_zero_random() {
         GenIsZeroTest((char*)x, result);
 
         bool want = r == 1 ? true : false;
-        bool have = is_zero(x);
+        bool have = u256_is_zero(x);
         verbose_assert_bool(have, want, "IsZero",
                             "Random is zero should match Go implementation",
                             false);
@@ -963,7 +959,7 @@ void test_and_random() {
     printf("Testing And\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenAndTest((char*)x, (char*)y, (char*)want);
-        and(have, x, y);
+        u256_and(have, x, y);
         verbose_assert_eq(have, want, "And",
                         "Random bitwise and should match Go implementation",
                         false);
@@ -976,7 +972,7 @@ void test_or_random() {
     printf("Testing Or\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenOrTest((char*)x, (char*)y, (char*)want);
-        or(have, x, y);
+        u256_or(have, x, y);
         verbose_assert_eq(have, want, "Or",
                         "Random bitwise or should match Go implementation",
                         false);
@@ -989,7 +985,7 @@ void test_xor_random() {
     printf("Testing Xor\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenXorTest((char*)x, (char*)y, (char*)want);
-        xor(have, x, y);
+        u256_xor(have, x, y);
         verbose_assert_eq(have, want, "Xor",
                         "Random bitwise xor should match Go implementation",
                         false);
@@ -1002,7 +998,7 @@ void test_not_random() {
     printf("Testing Not\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenNotTest((char*)x, (char*)want);
-        not(have, x);
+        u256_not(have, x);
         verbose_assert_eq(have, want, "Not",
                         "Random bitwise not should match Go implementation",
                         false);
@@ -1015,7 +1011,7 @@ void test_byte_random() {
     printf("Testing Byte\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenByteTest((char*)x, (char*)y, (char*)want);
-        byte(have, x, y);
+        u256_byte(have, x, y);
         verbose_assert_eq(have, want, "Byte",
                         "Random byte index should match Go implementation",
                         false);
@@ -1028,7 +1024,7 @@ void test_shl_random() {
     printf("Testing Shl\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenShlTest((char*)x, (char*)y, (char*)want);
-        shl(have, x, y);
+        u256_shl(have, x, y);
         verbose_assert_eq(have, want, "Shl",
                         "Random left shift should match Go implementation",
                         false);
@@ -1041,7 +1037,7 @@ void test_shr_random() {
     printf("Testing Shr\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenShrTest((char*)x, (char*)y, (char*)want);
-        shr(have, x, y);
+        u256_shr(have, x, y);
         verbose_assert_eq(have, want, "Shl",
                         "Random right shift should match Go implementation",
                         false);
@@ -1054,7 +1050,7 @@ void test_sar_random() {
     printf("Testing Sar\n");
     for (int i = 0; i < NUM_TESTS; i++) {
         GenSarTest((char*)x, (char*)y, (char*)want);
-        sar(have, x, y);
+        u256_sar(have, x, y);
         verbose_assert_eq(have, want, "Sar",
                     "Random signed right shift should match Go implementation",
                     false);
@@ -1073,7 +1069,7 @@ int main() {
     test_smod();
     test_add_mod();
     test_mul_mod();
-    test__exp();
+    test_exp();
     test_sign_extend();
 
     //////////////////////////// Comparison tests
@@ -1105,7 +1101,7 @@ int main() {
     test_smod_random();
     test_add_mod_random();
     test_mul_mod_random();
-    test__exp_random();
+    test_exp_random();
     test_sign_extend_random();
 
     //////////////////////////// Random tests: Comparison
