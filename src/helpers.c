@@ -213,11 +213,11 @@ bool signed_greater_than(u256 x, u256 y) {
     return carry != 0;
 }
 
-bool _eq(u256 x, u256 y) {
+bool eq(u256 x, u256 y) {
     return (x[0]==y[0]) && (x[1]==y[1]) && (x[2]==y[2]) && (x[3]==y[3]);
 }
 
-bool _is_zero(u256 x) {
+bool is_zero(u256 x) {
     return (x[0] | x[1] | x[2] | x[3]) == 0;
 }
 
@@ -235,7 +235,7 @@ void set_all_one(u256 x) {
 }
 
 int sign(u256 x) {
-    if (_is_zero(x)) {
+    if (is_zero(x)) {
         return 0;
     }
     if (x[3] < 0x8000000000000000ULL) {

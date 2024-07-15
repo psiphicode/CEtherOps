@@ -24,8 +24,8 @@ bool less_than(u256 x, u256 y);
 bool greater_than(u256 x, u256 y);
 bool signed_less_than(u256 x, u256 y);
 bool signed_greater_than(u256 x, u256 y);
-bool _eq(u256 x, u256 y);
-bool _is_zero(u256 x);
+bool eq(u256 x, u256 y);
+bool is_zero(u256 x);
 
 bool uint64_with_overflow(u64 *n, u256 x);
 void set_all_one(u256 x);

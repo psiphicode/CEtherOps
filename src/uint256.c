@@ -54,10 +54,10 @@ void u256_neg(u256 res, u256 x) {
 
 void u256_div(u256 res, u256 x, u256 y) {
     clear_words(&res[0], 4);
-    if (_is_zero(y) || greater_than(y, x)) {
+    if (is_zero(y) || greater_than(y, x)) {
         return;
     }
-    if (_eq(x, y)) {
+    if (eq(x, y)) {
         res[0] = 1;
         return;
     }
@@ -108,7 +108,7 @@ void u256_sdiv(u256 res, u256 n, u256 d) {
 
 void u256_mod(u256 res, u256 x, u256 y) {
     clear_words(&res[0], 4);
-    if (_is_zero(y) || _eq(x, y)) {
+    if (is_zero(y) || eq(x, y)) {
         return;
     }
 
@@ -195,7 +195,7 @@ void u256_add_mod(u256 res, u256 x, u256 y, u256 m) {
         return;
     }
 
-    if (_is_zero(m)) {
+    if (is_zero(m)) {
         clear_words(&res[0], 4);
         return;
     }
@@ -213,7 +213,7 @@ void u256_add_mod(u256 res, u256 x, u256 y, u256 m) {
 }
 
 void u256_mul_mod(u256 res, u256 x, u256 y, u256 m) {
-    if (_is_zero(x) || _is_zero(y) || _is_zero(m)) {
+    if (is_zero(x) || is_zero(y) || is_zero(m)) {
         clear_words(&res[0], 4);
         return;
     }
@@ -231,7 +231,7 @@ void u256_mul_mod(u256 res, u256 x, u256 y, u256 m) {
     copy_words(&pl[0], &p[0], 4);
     copy_words(&ph[0], &p[4], 4);
 
-    if (_is_zero(ph)) {
+    if (is_zero(ph)) {
         u256_mod(res, pl, m);
         return;
     }
@@ -365,11 +365,11 @@ bool u256_sgt(u256 x, u256 y) {
 }
 
 bool u256_eq(u256 x, u256 y) {
-    return _eq(x, y);
+    return eq(x, y);
 }
 
 bool u256_is_zero(u256 x) {
-    return _is_zero(x);
+    return is_zero(x);
 }
 
 /*
